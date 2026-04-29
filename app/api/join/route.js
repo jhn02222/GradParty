@@ -18,7 +18,7 @@ export async function POST(request) {
       data: {
         name,
         nickname: String(body.nickname || "").trim() || null,
-        photoUrl: photoUrl.length < 650000 ? photoUrl || initials(name) : initials(name),
+        photoUrl: photoUrl || initials(name),
       },
       include: { _count: { select: { badges: true } } },
     });

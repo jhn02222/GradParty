@@ -19,19 +19,6 @@ const badges = [
   { name: "Party Starter", icon: "GO", description: "First approved quest of the night" },
 ];
 
-const users = [
-  ["Chris J.", "The Grad", 380, 18],
-  ["Sarah L.", "Streak Queen", 352, 15],
-  ["Mike D.", "Cup Scout", 331, 13],
-  ["Emily B.", "Main Character", 310, 12],
-  ["Alex S.", "Group Chat Captain", 288, 10],
-  ["Jessica R.", "Photo Boss", 245, 9],
-  ["Davis E.", "Snack Patrol", 231, 8],
-  ["Tyler G.", "Fit Check", 212, 7],
-  ["Hannah W.", "Hydrated", 188, 6],
-  ["James K.", "Late Arrival", 165, 5],
-];
-
 async function main() {
   for (const quest of quests) {
     await prisma.quest.upsert({
@@ -49,36 +36,7 @@ async function main() {
     });
   }
 
-  for (const [name, nickname, points, drinks] of users) {
-    const existing = await prisma.user.findFirst({ where: { name } });
-    if (!existing) {
-      await prisma.user.create({
-        data: {
-          name,
-          nickname,
-          points,
-          drinks,
-          photoUrl: name.split(" ").map((part) => part[0]).join(""),
-        },
-      });
-    }
-  }
-
-  const chris = await prisma.user.findFirst({ where: { name: "Chris J." } });
-  if (chris) {
-    const count = await prisma.feedItem.count();
-    if (count === 0) {
-      await prisma.feedItem.createMany({
-        data: [
-          { userId: chris.id, type: "BADGE_EARNED", text: "unlocked Hydration Hero!", points: 5, icon: "H2O" },
-          { type: "QUEST_SUBMITTED", text: "Alex S. submitted Group Cheers!", points: 15, icon: "!!!" },
-          { type: "BADGE_EARNED", text: "Emily B. earned Main Character!", points: 10, icon: "*" },
-          { type: "QUEST_APPROVED", text: "Mike D. completed Mystery Cup Roulette!", points: 10, icon: "CUP" },
-          { type: "STREAK", text: "Sarah L. is on a 3 Quest Streak!", points: 15, icon: "3" },
-        ],
-      });
-    }
-  }
+  console.log("Seeded quests and badges. Users will be created from the join screen.");
 }
 
 main()

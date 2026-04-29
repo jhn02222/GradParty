@@ -11,6 +11,9 @@ export default function SubmitPage() {
   const [quest, setQuest] = useState(null);
   const [caption, setCaption] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
+  const [photoPreview, setPhotoPreview] = useState("");
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [photoStatus, setPhotoStatus] = useState("");
   const [status, setStatus] = useState("");
 
   useEffect(() => {
@@ -28,6 +31,10 @@ export default function SubmitPage() {
     const userId = localStorage.getItem("gradPartyUserId");
     const activeQuest = liveQuests.find((item) => item.category === "Drinks") || quest;
     if (!activeQuest?.id) return;
+    if (uploadingPhoto) {
+      setStatus("Wait for the photo upload to finish.");
+      return;
+    }
     setStatus("Submitting...");
     const response = await fetch("/api/submissions", {
       method: "POST",
@@ -42,6 +49,29 @@ export default function SubmitPage() {
       }),
     });
     setStatus(response.ok ? "Pending review!" : "Could not submit. Try again.");
+  }
+
+  async function handleProofPhoto(file) {
+    setPhotoPreview(URL.createObjectURL(file));
+    setUploadingPhoto(true);
+    setPhotoStatus("Uploading proof...");
+    const form = new FormData();
+    form.append("file", file);
+    form.append("folder", "submissions");
+
+    try {
+      const response = await fetch("/api/upload", { method: "POST", body: form });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Upload failed");
+      setPhotoUrl(data.url);
+      setPhotoStatus("Proof photo saved!");
+    } catch (uploadError) {
+      console.error(uploadError);
+      setPhotoUrl("");
+      setPhotoStatus("Photo upload failed. Try another image.");
+    } finally {
+      setUploadingPhoto(false);
+    }
   }
 
   return (
@@ -66,10 +96,10 @@ export default function SubmitPage() {
         </div>
         <section className="mt-7 space-y-4">
           <p className="hand text-center text-lg font-bold">Also works for: {quest?.title || "photo quests"}</p>
-          <PhotoUploadBox helper="Upload proof photo" small onPhoto={setPhotoUrl} />
+          <PhotoUploadBox helper="Upload proof photo" small onPhoto={handleProofPhoto} previewUrl={photoPreview} uploading={uploadingPhoto} status={photoStatus} />
           <label className="sr-only" htmlFor="caption">Caption</label>
           <input id="caption" value={caption} onChange={(event) => setCaption(event.target.value)} placeholder="Add a caption (optional)" className="torn-soft w-full bg-uga-paper px-4 py-3 text-zinc-950 placeholder:text-zinc-500" />
-          <RedTornButton onClick={submitProof} className="w-full">SUBMIT +{selected.points} PTS</RedTornButton>
+          <RedTornButton onClick={submitProof} className="w-full">{uploadingPhoto ? "PHOTO UPLOADING..." : `SUBMIT +${selected.points} PTS`}</RedTornButton>
           <p className="hand text-center text-xs">Your photo will be reviewed.</p>
           {status && <p className="hand text-center text-sm font-bold text-uga-red">{status}</p>}
         </section>

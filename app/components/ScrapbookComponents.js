@@ -94,23 +94,25 @@ export function LiveFeedItem({ item, index = 0, compact = false }) {
   );
 }
 
-export function PhotoUploadBox({ helper = "Click to upload or take a selfie!", small = false, onPhoto }) {
+export function PhotoUploadBox({ helper = "Click to upload or take a selfie!", small = false, onPhoto, previewUrl, uploading = false, status = "" }) {
   function handleChange(event) {
     const file = event.target.files?.[0];
     if (!file || !onPhoto) return;
-    const reader = new FileReader();
-    reader.onload = () => onPhoto(reader.result);
-    reader.readAsDataURL(file);
+    onPhoto(file);
   }
 
   return (
     <label className={`relative block bg-uga-paper p-4 text-zinc-950 shadow-taped ${small ? "w-full" : "mx-auto w-[76%] max-w-72"}`}>
       <TapeCorner corners={["tl", "tr", "bl", "br"]} />
       <input className="sr-only" type="file" accept="image/*" aria-label={helper} onChange={handleChange} />
-      <div className={`${small ? "h-44" : "h-64"} grid place-items-center border-2 border-zinc-300 bg-zinc-100`}>
-        <span className="text-7xl font-black text-uga-red">+</span>
+      <div className={`${small ? "h-44" : "h-64"} grid place-items-center overflow-hidden border-2 border-zinc-300 bg-zinc-100`}>
+        {previewUrl ? (
+          <img src={previewUrl} alt="Selected upload preview" className="h-full w-full object-cover" />
+        ) : (
+          <span className="text-7xl font-black text-uga-red">+</span>
+        )}
       </div>
-      <p className="hand mt-2 text-center text-sm font-bold">{helper}</p>
+      <p className="hand mt-2 text-center text-sm font-bold">{uploading ? "Uploading photo..." : status || helper}</p>
     </label>
   );
 }

@@ -7,8 +7,34 @@ export default function JoinPage() {
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
+  const [photoPreview, setPhotoPreview] = useState("");
+  const [photoStatus, setPhotoStatus] = useState("");
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  async function handlePhoto(file) {
+    setPhotoPreview(URL.createObjectURL(file));
+    setUploadingPhoto(true);
+    setPhotoStatus("Uploading selfie...");
+    const form = new FormData();
+    form.append("file", file);
+    form.append("folder", "profiles");
+
+    try {
+      const response = await fetch("/api/upload", { method: "POST", body: form });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Upload failed");
+      setPhotoUrl(data.url);
+      setPhotoStatus("Selfie saved!");
+    } catch (uploadError) {
+      console.error(uploadError);
+      setPhotoUrl("");
+      setPhotoStatus("Photo upload failed. You can still join.");
+    } finally {
+      setUploadingPhoto(false);
+    }
+  }
 
   function saveProfile() {
     if (saving) return;
@@ -25,7 +51,7 @@ export default function JoinPage() {
         body: JSON.stringify({
           name: guestName,
           nickname,
-          photoUrl: photoUrl.length < 650000 ? photoUrl : "",
+          photoUrl,
         }),
       })
       .then((response) => response.json())
@@ -43,7 +69,7 @@ export default function JoinPage() {
       <Confetti />
       <section className="mobile-page flex min-h-[760px] flex-col items-center justify-center gap-6 p-0">
         <RansomTitle size="text-5xl" className="-rotate-2 text-center">GRAD PARTY</RansomTitle>
-        <PhotoUploadBox onPhoto={setPhotoUrl} />
+        <PhotoUploadBox onPhoto={handlePhoto} previewUrl={photoPreview} uploading={uploadingPhoto} status={photoStatus} />
         <div className="w-full space-y-4">
           <label className="sr-only" htmlFor="guest-name">What do we call you?</label>
           <input
@@ -69,7 +95,6 @@ export default function JoinPage() {
         >
           {saving ? "MAKING YOUR CARD..." : "LET'S GO! (Start the Quest)"}
         </a>
-        <a href="/home" className="hand text-center text-sm font-bold underline">Skip profile and enter</a>
         {error && <p className="hand text-center text-sm font-bold text-uga-red">{error}</p>}
       </section>
     </main>

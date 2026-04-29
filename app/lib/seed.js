@@ -17,19 +17,6 @@ const seedBadges = [
   { name: "Party Starter", icon: "GO", description: "First approved quest of the night" },
 ];
 
-const seedUsers = [
-  ["Chris J.", "The Grad", 380, 18],
-  ["Sarah L.", "Streak Queen", 352, 15],
-  ["Mike D.", "Cup Scout", 331, 13],
-  ["Emily B.", "Main Character", 310, 12],
-  ["Alex S.", "Group Chat Captain", 288, 10],
-  ["Jessica R.", "Photo Boss", 245, 9],
-  ["Davis E.", "Snack Patrol", 231, 8],
-  ["Tyler G.", "Fit Check", 212, 7],
-  ["Hannah W.", "Hydrated", 188, 6],
-  ["James K.", "Late Arrival", 165, 5],
-];
-
 let seeded = false;
 
 export async function ensureSeedData() {
@@ -46,31 +33,6 @@ export async function ensureSeedData() {
     ]);
   }
 
-  const userCount = await prisma.user.count();
-  if (userCount === 0) {
-    await prisma.user.createMany({
-      data: seedUsers.map(([name, nickname, points, drinks]) => ({
-        name,
-        nickname,
-        points,
-        drinks,
-        photoUrl: initials(name),
-      })),
-    });
-  }
-
-  const feedCount = await prisma.feedItem.count();
-  if (feedCount === 0) {
-    await prisma.feedItem.createMany({
-      data: [
-        { type: "BADGE_EARNED", text: "Chris J. unlocked Hydration Hero!", points: 5, icon: "H2O" },
-        { type: "QUEST_SUBMITTED", text: "Alex S. submitted Group Cheers!", points: 15, icon: "!!!" },
-        { type: "BADGE_EARNED", text: "Emily B. earned Main Character!", points: 10, icon: "*" },
-        { type: "QUEST_APPROVED", text: "Mike D. completed Mystery Cup Roulette!", points: 10, icon: "CUP" },
-        { type: "STREAK", text: "Sarah L. is on a 3 Quest Streak!", points: 15, icon: "3" },
-      ],
-    });
-  }
   seeded = true;
 }
 

@@ -36,6 +36,18 @@ ADMIN_PIN=pick-a-real-pin
 
 Use that PIN on `/admin`.
 
+Add Railway Bucket variables to the Next.js service. Create a Bucket on the Railway canvas, then use the bucket credentials/variable references:
+
+```txt
+BUCKET=${{YourBucket.BUCKET}}
+ENDPOINT=${{YourBucket.ENDPOINT}}
+ACCESS_KEY_ID=${{YourBucket.ACCESS_KEY_ID}}
+SECRET_ACCESS_KEY=${{YourBucket.SECRET_ACCESS_KEY}}
+REGION=${{YourBucket.REGION}}
+```
+
+Replace `YourBucket` with the bucket service name shown in Railway.
+
 ## 5. Deploy Config
 
 This repo includes `railway.json`, which tells Railway to:
@@ -51,7 +63,7 @@ If you already set commands manually in the Railway dashboard, the checked-in `r
 
 Redeploy the Next.js service.
 
-The app seeds quests, badges, starter leaderboard users, and starter feed items automatically on first API request.
+The app seeds quests and badges automatically on first API request. Real users are created from `/join`.
 
 ## 7. Generate Public URL
 
@@ -74,4 +86,4 @@ Important routes:
 
 ## Notes
 
-Photo uploads currently store a browser data URL in the database. That keeps the app self-contained for the first deploy. For a bigger party or lots of photos, move uploads to Cloudinary or a Railway Storage Bucket and store only the final image URL in `Submission.photoUrl` and `User.photoUrl`.
+Photo uploads go to a private Railway Bucket. The database stores app URLs like `/api/files?key=...`, and the app reads the object from the bucket when displaying profile, proof, gallery, and TV photos.
