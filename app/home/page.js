@@ -9,9 +9,15 @@ export default function HomePage() {
 
   useEffect(() => {
     const userId = localStorage.getItem("gradPartyUserId");
+    const guestName = localStorage.getItem("gradPartyGuestName");
     fetch(`/api/home${userId ? `?userId=${userId}` : ""}`)
       .then((response) => response.json())
-      .then(setData)
+      .then((homeData) => {
+        if (!userId && guestName) {
+          homeData.user = { ...homeData.user, name: guestName, photo: guestName.slice(0, 2).toUpperCase() };
+        }
+        setData(homeData);
+      })
       .catch(() => {});
   }, []);
 

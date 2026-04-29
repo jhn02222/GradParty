@@ -1,26 +1,49 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Confetti, PhotoUploadBox, RansomTitle, RedTornButton } from "../components/ScrapbookComponents";
 
 export default function JoinPage() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   async function saveProfile() {
+    if (saving) return;
+    const guestName = name.trim() || "Chris J.";
     setSaving(true);
-    const response = await fetch("/api/join", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name || "Chris J.", nickname, photoUrl }),
-    });
-    const data = await response.json();
-    if (data.user?.id) {
-      localStorage.setItem("gradPartyUserId", data.user.id);
+    setError("");
+    localStorage.setItem("gradPartyGuestName", guestName);
+    localStorage.setItem("gradPartyGuestNickname", nickname.trim());
+
+    try {
+      const response = await fetch("/api/join", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: guestName,
+          nickname,
+          photoUrl: photoUrl.length < 650000 ? photoUrl : "",
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.error || "Could not create profile");
+      }
+      if (data.user?.id) {
+        localStorage.setItem("gradPartyUserId", data.user.id);
+      }
+      router.push("/home");
+    } catch (joinError) {
+      console.error(joinError);
+      setError("Could not save to the leaderboard yet, but you can still play.");
+      router.push("/home");
     }
-    window.location.href = "/home";
   }
 
   return (
@@ -48,6 +71,7 @@ export default function JoinPage() {
           />
         </div>
         <RedTornButton onClick={saveProfile} className="w-full text-lg">{saving ? "MAKING YOUR CARD..." : "LET'S GO! (Start the Quest)"}</RedTornButton>
+        {error && <p className="hand text-center text-sm font-bold text-uga-red">{error}</p>}
       </section>
     </main>
   );
