@@ -36,17 +36,16 @@ ADMIN_PIN=pick-a-real-pin
 
 Use that PIN on `/admin`.
 
-## 5. Set Pre-Deploy Command
+## 5. Deploy Config
 
-In the Next.js service:
+This repo includes `railway.json`, which tells Railway to:
 
-`Settings` -> `Deploy` -> `Pre-deploy Command`
+- run `npm run build`
+- run `npx prisma migrate deploy` before deploy
+- start with `npm run start`
+- healthcheck `/health`
 
-Set:
-
-```bash
-npx prisma migrate deploy
-```
+If you already set commands manually in the Railway dashboard, the checked-in `railway.json` should override them on the next deploy.
 
 ## 6. Deploy
 
