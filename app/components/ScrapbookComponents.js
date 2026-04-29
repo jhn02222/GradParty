@@ -38,7 +38,7 @@ export function TornPaperCard({ children, dark = false, rotate = "", className =
 export function RedTornButton({ children, href, className = "", onClick, type = "button" }) {
   const classes = `torn relative inline-flex min-h-12 items-center justify-center bg-uga-red px-6 py-3 text-center font-black uppercase text-white shadow-paper transition hover:scale-[1.02] active:scale-95 ${className}`;
   if (href) {
-    return <Link href={href} className={classes}>{children}</Link>;
+    return <Link href={href} onClick={onClick} className={classes}>{children}</Link>;
   }
   return <button type={type} onClick={onClick} className={classes}>{children}</button>;
 }
