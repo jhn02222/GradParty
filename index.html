@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grad Quest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero-grid">
+        <aside class="brand-card panel">
+          <div class="doodle-layer" aria-hidden="true">
+            <span class="spark s1">✦</span>
+            <span class="spark s2">⌁</span>
+            <span class="spark s3">✧</span>
+            <span class="spark s4">▱</span>
+            <span class="spark s5">×</span>
+          </div>
+          <div class="g-logo">G</div>
+          <h1><span>Grad</span><strong>Quest</strong></h1>
+          <p>Eat. Drink. <b>Go Dawgs.</b></p>
+          <div class="mascot-avatar large">G</div>
+          <button class="primary-cta" data-scroll-target="join">Join the Party <span>›</span></button>
+          <small>Create your profile to get started</small>
+        </aside>
+
+        <section class="leaderboard panel" id="leaderboard">
+          <nav class="top-nav">
+            <div class="mini-brand"><span class="mini-logo">G</span><b>Grad <em>Quest</em></b></div>
+            <a class="active">Leaderboard</a>
+            <a>Live Feed</a>
+            <a>Gallery</a>
+            <a>Awards</a>
+            <div class="drink-total"><span class="cup-icon">▥</span><small>Total Drinks</small><b id="totalDrinks">482</b></div>
+          </nav>
+
+          <div class="section-title">
+            <i></i>
+            <h2>Leaderboard</h2>
+            <i></i>
+          </div>
+          <div class="tabs" role="tablist">
+            <button class="active">All Players</button>
+            <button>My Friends</button>
+          </div>
+          <div class="table-head"><span>#</span><span>Player</span><span>Drinks</span></div>
+          <ol class="rank-list" id="rankList"></ol>
+          <p class="tagline">Complete quests. Earn points. <b>Win glory.</b></p>
+        </section>
+
+        <aside class="side-feed panel">
+          <div class="feed-head">
+            <h3><span></span> Live Feed</h3>
+            <b>Live</b>
+          </div>
+          <div class="activity-list compact" id="liveFeed"></div>
+          <h3 class="quest-cam-title">Quest Cam</h3>
+          <div class="quest-cam" id="questCam"></div>
+          <div class="top-player-card">
+            <span class="trophy">🏆</span>
+            <div><small>Top Player</small><b id="topPlayer">Bulldog</b><strong>18 Drinks</strong></div>
+            <div class="avatar ring">B</div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="mobile-strip" aria-label="Mobile app screens">
+        <article class="phone join-phone" id="join">
+          <div class="status">9:41 <span></span></div>
+          <div class="phone-logo">G</div>
+          <h2>Join the Party</h2>
+          <p>Create your profile to get started!</p>
+          <label class="photo-picker">
+            <input id="profileUpload" type="file" accept="image/*" />
+            <img id="profilePreview" alt="" />
+            <span>📷</span>
+          </label>
+          <input id="playerName" type="text" placeholder="Name" value="Dawg Fan" />
+          <input id="playerNick" type="text" placeholder="Nickname (optional)" value="UGA Legend" />
+          <button class="primary-cta full" id="joinButton">Let's Go! <span>→</span></button>
+          <div class="phone-doodles">✿ ✧ ♧</div>
+        </article>
+
+        <article class="phone dashboard-phone">
+          <div class="status">9:41 <span></span></div>
+          <header class="phone-header"><button>☰</button><b>Dashboard</b><button>♢</button></header>
+          <div class="profile-row">
+            <div class="avatar bulldog">G</div>
+            <div><b id="dashName">Dawg Fan</b><small id="dashNick">UGA Legend</small></div>
+            <button>✎</button>
+          </div>
+          <div class="stat-grid">
+            <div class="stat hot"><small>Drinks</small><b id="dashDrinks">7</b></div>
+            <div class="stat"><small>Rank</small><b>8<sup>th</sup></b></div>
+            <div class="stat"><small>Points</small><b id="dashPoints">245</b></div>
+            <div class="stat"><small>Badges</small><b>5</b></div>
+          </div>
+          <div class="next-badge">
+            <div class="badge-icon">3</div>
+            <div><small>Next Badge</small><b>3 in a Row</b><span><i style="width:66%"></i></span></div>
+            <em>2 / 3</em>
+          </div>
+          <button class="primary-cta full" data-scroll-target="quests">Browse Quests</button>
+          <div class="bottom-nav"><b>⌂</b><span>♘</span><span>⊕</span><span>♜</span><span>●</span></div>
+        </article>
+
+        <article class="phone quests-phone" id="quests">
+          <div class="status">9:41 <span></span></div>
+          <header class="phone-header"><button></button><b>Quests</b><button></button></header>
+          <div class="mini-tabs"><button class="active">All</button><button>Drinks</button><button>Photo</button><button>Party</button></div>
+          <div class="quest-list" id="questList"></div>
+          <div class="bottom-nav"><span>⌂</span><b>♘</b><span>⊕</span><span>♜</span><span>●</span></div>
+        </article>
+
+        <article class="phone submit-phone">
+          <div class="status">9:41 <span></span></div>
+          <header class="phone-header"><button>‹</button><b>Submit Quest</b><button></button></header>
+          <div class="quest-submit-icon">▥</div>
+          <h3 id="submitTitle">Mystery Cup Roulette</h3>
+          <p>Drink something you didn't know was in it</p>
+          <label class="proof-box">
+            <input id="proofUpload" type="file" accept="image/*" />
+            <img id="proofPreview" alt="" />
+            <span>▣</span>
+            <b>Take a photo or choose from gallery</b>
+          </label>
+          <input id="captionInput" type="text" placeholder="Write something..." />
+          <button class="primary-cta full" id="submitButton">Submit</button>
+        </article>
+
+        <article class="phone gallery-phone">
+          <div class="status">9:41 <span></span></div>
+          <header class="phone-header"><button>‹</button><b>Gallery</b><button></button></header>
+          <div class="mini-tabs"><button class="active">All</button><button>Drinks</button><button>Photos</button></div>
+          <div class="mobile-gallery" id="mobileGallery"></div>
+          <div class="bottom-nav"><span>⌂</span><span>♘</span><span>⊕</span><b>♜</b><span>●</span></div>
+        </article>
+
+        <article class="phone awards-phone">
+          <div class="status">9:41 <span></span></div>
+          <header class="phone-header"><button></button><b>Awards</b><button></button></header>
+          <div class="badge-row" id="badgeRow"></div>
+          <div class="award-list" id="awardList"></div>
+          <div class="bottom-nav"><span>⌂</span><span>♘</span><span>⊕</span><span>♜</span><b>●</b></div>
+        </article>
+      </section>
+
+      <section class="admin-panel panel">
+        <div>
+          <h2>Admin Queue</h2>
+          <p>Approve submissions, feature quest-cam moments, and add bonus points for the TV board.</p>
+        </div>
+        <div class="admin-actions">
+          <button>Approve Latest</button>
+          <button>Feature on TV</button>
+          <button>Bonus +20</button>
+          <button>Pause Game</button>
+        </div>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

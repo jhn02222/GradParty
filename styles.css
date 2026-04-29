@@ -1,0 +1,975 @@
+:root {
+  --bg: #050505;
+  --panel: rgba(18, 18, 18, 0.9);
+  --line: rgba(255, 255, 255, 0.16);
+  --muted: #a8a8a8;
+  --text: #f4f4f4;
+  --red: #e31b2f;
+  --red-dark: #8d0d17;
+  --gold: #ffbc2f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 17% 10%, rgba(190, 10, 25, 0.24), transparent 26rem),
+    radial-gradient(circle at 85% 5%, rgba(255, 255, 255, 0.08), transparent 18rem),
+    linear-gradient(135deg, #020202 0%, #101010 48%, #030303 100%);
+  font-family: Inter, system-ui, sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.app-shell {
+  width: min(1880px, 100%);
+  margin: 0 auto;
+  padding: 18px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 360px minmax(540px, 1fr) 360px;
+  gap: 18px;
+  min-height: 720px;
+}
+
+.panel,
+.phone {
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.01)),
+    var(--panel);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.025), 0 24px 70px rgba(0, 0, 0, 0.45);
+}
+
+.panel {
+  border-radius: 14px;
+}
+
+.brand-card {
+  position: relative;
+  overflow: hidden;
+  padding: 32px 26px;
+  text-align: center;
+  background:
+    linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,.75)),
+    repeating-linear-gradient(125deg, rgba(225, 27, 47, .08) 0 2px, transparent 2px 16px),
+    #0a0a0a;
+}
+
+.g-logo,
+.mini-logo,
+.phone-logo {
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+  border-radius: 50%;
+  color: #111;
+  background: radial-gradient(circle, white 0 42%, #d7d7d7 43% 55%, #111 56% 68%, var(--red) 69% 73%, #111 74%);
+  font-family: Georgia, serif;
+  font-weight: 900;
+}
+
+.g-logo {
+  width: 96px;
+  height: 62px;
+  border-radius: 50%;
+  font-size: 48px;
+}
+
+.brand-card h1 {
+  margin: 18px 0 0;
+  text-transform: uppercase;
+  line-height: .82;
+}
+
+.brand-card h1 span {
+  display: block;
+  font: 900 94px/0.85 Inter, sans-serif;
+  letter-spacing: 0;
+  text-shadow: 0 4px 0 rgba(255,255,255,.2);
+}
+
+.brand-card h1 strong {
+  display: block;
+  color: var(--red);
+  font: 116px/0.78 "Bebas Neue", sans-serif;
+  transform: skew(-9deg) rotate(-3deg);
+  text-shadow: 0 6px 0 #310006;
+}
+
+.brand-card p,
+.tagline {
+  color: #e8e8e8;
+  font: 30px "Bebas Neue", sans-serif;
+  letter-spacing: 3px;
+}
+
+.brand-card p b,
+.tagline b,
+.mini-brand em {
+  color: var(--red);
+  font-style: normal;
+}
+
+.mascot-avatar {
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--red);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 28%, #f1f1f1, #555 42%, #141414 43%);
+  color: var(--red);
+  font-family: Georgia, serif;
+  font-weight: 900;
+}
+
+.mascot-avatar.large {
+  width: 190px;
+  height: 190px;
+  margin: 34px auto 24px;
+  font-size: 92px;
+  box-shadow: 0 0 46px rgba(227, 27, 47, 0.35);
+}
+
+.primary-cta {
+  border: 0;
+  border-radius: 10px;
+  padding: 16px 28px;
+  color: white;
+  background: linear-gradient(180deg, #f23343, #bd101e);
+  text-transform: uppercase;
+  font-weight: 900;
+  box-shadow: 0 0 22px rgba(227, 27, 47, 0.28);
+}
+
+.primary-cta.full {
+  width: 100%;
+}
+
+.brand-card small {
+  display: block;
+  margin-top: 18px;
+  color: var(--muted);
+}
+
+.spark {
+  position: absolute;
+  color: white;
+  font-size: 26px;
+}
+
+.s1 { left: 50px; top: 62px; color: var(--red); }
+.s2 { right: 70px; top: 42px; }
+.s3 { right: 40px; top: 170px; }
+.s4 { left: 70px; bottom: 240px; color: var(--red); }
+.s5 { right: 75px; bottom: 330px; color: var(--red); }
+
+.leaderboard {
+  padding: 0 38px 28px;
+}
+
+.top-nav {
+  display: grid;
+  grid-template-columns: 2fr repeat(4, 1fr) 120px;
+  align-items: center;
+  gap: 18px;
+  min-height: 58px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.mini-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 22px "Bebas Neue", sans-serif;
+}
+
+.mini-logo {
+  width: 42px;
+  height: 28px;
+  font-size: 22px;
+}
+
+.top-nav a {
+  color: #d9d9d9;
+  text-align: center;
+}
+
+.top-nav a.active {
+  color: white;
+  border-bottom: 4px solid var(--red);
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+}
+
+.drink-total {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  align-items: center;
+  column-gap: 8px;
+  text-align: left;
+}
+
+.drink-total b {
+  grid-column: 2;
+  color: var(--red);
+  font: 28px "Bebas Neue", sans-serif;
+}
+
+.cup-icon {
+  grid-row: span 2;
+  color: var(--red);
+  font-size: 28px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 28px;
+}
+
+.section-title h2 {
+  margin: 0;
+  font: 64px "Bebas Neue", sans-serif;
+  letter-spacing: 10px;
+  text-transform: uppercase;
+}
+
+.section-title i {
+  width: 28px;
+  height: 32px;
+  border-top: 4px solid var(--red);
+  border-bottom: 4px solid var(--red);
+  transform: skewY(-30deg);
+}
+
+.tabs,
+.mini-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin: 6px 0 30px;
+}
+
+.tabs button,
+.mini-tabs button {
+  min-width: 160px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  padding: 12px 26px;
+  color: white;
+  background: rgba(255,255,255,.03);
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.tabs button.active,
+.mini-tabs button.active {
+  border-color: var(--red);
+  background: linear-gradient(180deg, #df2333, #a70e1a);
+}
+
+.table-head,
+.rank-row {
+  display: grid;
+  grid-template-columns: 52px 1fr 96px;
+  align-items: center;
+}
+
+.table-head {
+  color: var(--muted);
+  padding: 0 26px 10px;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.table-head span:last-child {
+  text-align: right;
+}
+
+.rank-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.rank-row {
+  min-height: 58px;
+  margin-bottom: 2px;
+  padding: 0 22px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.025));
+}
+
+.rank-row.top {
+  border-color: var(--red);
+  background: linear-gradient(90deg, rgba(227, 27, 47, .35), rgba(227, 27, 47, .08));
+  box-shadow: inset 0 0 28px rgba(227,27,47,.22), 0 0 22px rgba(227,27,47,.12);
+}
+
+.rank-num {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.12);
+  font-weight: 900;
+}
+
+.rank-row.top .rank-num {
+  background: var(--red);
+}
+
+.player-cell {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--red);
+  background: linear-gradient(135deg, #f2d1b3, #111 64%);
+  color: white;
+  font-weight: 900;
+  overflow: hidden;
+}
+
+.avatar img,
+.photo-picker img,
+.proof-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.score-cell {
+  color: white;
+  font: 30px "Bebas Neue", sans-serif;
+  text-align: right;
+}
+
+.score-cell span {
+  color: var(--red);
+  margin-left: 12px;
+}
+
+.tagline {
+  margin: 30px 0 0;
+  text-align: center;
+  font-size: 20px;
+}
+
+.side-feed {
+  padding: 26px;
+}
+
+.feed-head,
+.phone-header,
+.profile-row,
+.top-player-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.feed-head h3,
+.quest-cam-title {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+
+.feed-head h3 span {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--red);
+}
+
+.feed-head b {
+  padding: 7px 12px;
+  border-radius: 5px;
+  background: var(--red);
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.activity-list {
+  margin: 22px 0 26px;
+}
+
+.activity {
+  display: grid;
+  grid-template-columns: 46px 1fr 46px;
+  gap: 12px;
+  align-items: center;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(255,255,255,.09);
+}
+
+.activity strong {
+  display: block;
+  font-size: 12px;
+}
+
+.activity small {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.activity b {
+  color: var(--red);
+  text-align: right;
+  font-size: 20px;
+}
+
+.quest-cam {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.cam-shot,
+.gallery-shot {
+  min-height: 112px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.85), transparent 8%),
+    radial-gradient(circle at 68% 30%, rgba(255,255,255,.7), transparent 8%),
+    linear-gradient(135deg, rgba(227, 27, 47, .76), rgba(12,12,12,.72)),
+    var(--photo, linear-gradient(135deg, #5f0c12, #111));
+  background-size: cover;
+  overflow: hidden;
+  position: relative;
+}
+
+.cam-shot::after,
+.gallery-shot::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+  text-shadow: 0 2px 8px black;
+  text-transform: uppercase;
+}
+
+.top-player-card {
+  margin-top: 18px;
+  border: 1px solid var(--red);
+  border-radius: 10px;
+  padding: 16px;
+  background: linear-gradient(90deg, rgba(227, 27, 47, .18), rgba(255,255,255,.05));
+}
+
+.trophy {
+  font-size: 36px;
+}
+
+.top-player-card small,
+.top-player-card strong {
+  display: block;
+  text-transform: uppercase;
+}
+
+.top-player-card strong {
+  color: var(--red);
+}
+
+.mobile-strip {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.phone {
+  min-height: 438px;
+  border-radius: 24px;
+  padding: 14px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(227,27,47,.22), transparent 11rem),
+    linear-gradient(180deg, #171717, #050505);
+}
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.status span::after {
+  content: "◥ ▰";
+}
+
+.phone-logo {
+  width: 44px;
+  height: 28px;
+  margin-top: 10px;
+}
+
+.phone h2,
+.phone h3 {
+  margin: 14px 0 4px;
+  text-align: center;
+  text-transform: uppercase;
+  font: 24px "Bebas Neue", sans-serif;
+  letter-spacing: 1px;
+}
+
+.phone p {
+  color: #cfcfcf;
+  text-align: center;
+  font-size: 11px;
+}
+
+.photo-picker {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  margin: 18px auto;
+  border-radius: 50%;
+  border: 2px solid var(--red);
+  background: radial-gradient(circle, #eee, #555 55%, #111 56%);
+  overflow: hidden;
+}
+
+.photo-picker input,
+.proof-box input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.photo-picker span {
+  position: absolute;
+  right: -2px;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: white;
+  z-index: 2;
+}
+
+.photo-picker img,
+.proof-box img {
+  display: none;
+  position: absolute;
+  inset: 0;
+}
+
+.phone input[type="text"] {
+  width: 100%;
+  margin-bottom: 8px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 8px;
+  padding: 13px;
+  color: white;
+  background: rgba(255,255,255,.07);
+  font-size: 12px;
+}
+
+.phone-doodles {
+  margin-top: 22px;
+  color: rgba(255,255,255,.45);
+  text-align: center;
+}
+
+.phone-header {
+  margin: 14px 0 12px;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.phone-header button {
+  border: 0;
+  color: white;
+  background: transparent;
+}
+
+.profile-row {
+  gap: 10px;
+  justify-content: flex-start;
+}
+
+.profile-row small {
+  display: block;
+  color: #cfcfcf;
+  margin-top: 3px;
+}
+
+.profile-row button {
+  margin-left: auto;
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 6px;
+  color: white;
+  background: transparent;
+}
+
+.bulldog {
+  background: radial-gradient(circle at 50% 38%, #ddd, #555 45%, #111 46%);
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.stat {
+  min-height: 74px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 8px;
+  padding: 12px;
+  background: rgba(255,255,255,.045);
+}
+
+.stat.hot {
+  border-color: rgba(227,27,47,.7);
+  background: rgba(227,27,47,.16);
+}
+
+.stat small,
+.next-badge small {
+  display: block;
+  color: #cfcfcf;
+  text-transform: uppercase;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.stat b {
+  font-size: 25px;
+}
+
+.next-badge {
+  display: grid;
+  grid-template-columns: 44px 1fr 34px;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  padding: 12px;
+  background: linear-gradient(90deg, rgba(227,27,47,.22), rgba(255,255,255,.04));
+}
+
+.badge-icon {
+  display: grid;
+  place-items: center;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--red);
+  color: var(--gold);
+  font-weight: 900;
+}
+
+.next-badge span {
+  display: block;
+  height: 5px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.18);
+}
+
+.next-badge i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--red);
+}
+
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 18px;
+  color: #8d8d8d;
+  font-size: 17px;
+}
+
+.bottom-nav b {
+  color: var(--red);
+}
+
+.mini-tabs {
+  justify-content: flex-start;
+  margin: 4px 0 10px;
+}
+
+.mini-tabs button {
+  min-width: 0;
+  padding: 8px 13px;
+  font-size: 9px;
+}
+
+.quest-item {
+  display: grid;
+  grid-template-columns: 36px 1fr 42px;
+  gap: 9px;
+  align-items: center;
+  margin-bottom: 7px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 8px;
+  padding: 9px;
+  background: rgba(255,255,255,.045);
+  color: white;
+  text-align: left;
+  width: 100%;
+}
+
+.quest-item b {
+  display: block;
+  font-size: 11px;
+}
+
+.quest-item small {
+  color: #bdbdbd;
+  font-size: 9px;
+}
+
+.quest-item em {
+  color: white;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.quest-icon,
+.quest-submit-icon {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--red);
+  background: rgba(227,27,47,.2);
+}
+
+.quest-icon {
+  width: 34px;
+  height: 34px;
+}
+
+.quest-submit-icon {
+  width: 82px;
+  height: 82px;
+  margin: 20px auto 8px;
+  background: linear-gradient(180deg, #ef3344, #b40c19);
+  font-size: 36px;
+}
+
+.proof-box {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 110px;
+  margin: 18px 0 12px;
+  border: 1px dashed rgba(255,255,255,.25);
+  border-radius: 8px;
+  color: #bdbdbd;
+  text-align: center;
+  overflow: hidden;
+}
+
+.proof-box b {
+  width: 130px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.proof-box span {
+  font-size: 28px;
+}
+
+.mobile-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.gallery-shot {
+  min-height: 85px;
+}
+
+.badge-row {
+  display: flex;
+  gap: 10px;
+  overflow: hidden;
+  margin: 14px 0;
+}
+
+.badge {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  border-radius: 50%;
+  border: 1px solid var(--red);
+  background: rgba(227,27,47,.15);
+  font-size: 20px;
+}
+
+.award-card {
+  display: grid;
+  grid-template-columns: 34px 1fr 14px;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: rgba(255,255,255,.045);
+}
+
+.award-card b {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.award-card small {
+  color: #bdbdbd;
+  font-size: 9px;
+}
+
+.admin-panel {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 20px 26px;
+}
+
+.admin-panel h2 {
+  margin: 0;
+  font: 34px "Bebas Neue", sans-serif;
+  letter-spacing: 2px;
+}
+
+.admin-panel p {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-actions button {
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: white;
+  background: rgba(255,255,255,.06);
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+@media (max-width: 1200px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-card {
+    min-height: 520px;
+  }
+
+  .mobile-strip {
+    grid-template-columns: repeat(3, minmax(210px, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .app-shell {
+    padding: 10px;
+  }
+
+  .leaderboard {
+    padding: 0 14px 18px;
+  }
+
+  .top-nav {
+    grid-template-columns: 1fr auto;
+  }
+
+  .top-nav a {
+    display: none;
+  }
+
+  .drink-total {
+    transform: scale(.9);
+    transform-origin: right;
+  }
+
+  .section-title h2 {
+    font-size: 44px;
+    letter-spacing: 5px;
+  }
+
+  .tabs button {
+    min-width: 120px;
+  }
+
+  .player-cell {
+    font-size: 15px;
+  }
+
+  .mobile-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-panel {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
