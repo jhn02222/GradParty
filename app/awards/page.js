@@ -2,16 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { BadgeIcon, BottomNav, RansomTitle, TornPaperCard } from "../components/ScrapbookComponents";
-import { badges } from "../data/mockData";
 
 export default function AwardsPage() {
-  const [items, setItems] = useState(badges);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     const userId = localStorage.getItem("gradPartyUserId");
     fetch(`/api/awards${userId ? `?userId=${userId}` : ""}`)
       .then((response) => response.json())
-      .then((data) => setItems(data.badges || badges))
+      .then((data) => setItems(data.badges || []))
       .catch(() => {});
   }, []);
 
@@ -32,6 +31,7 @@ export default function AwardsPage() {
               </div>
             ))}
           </div>
+          {items.length === 0 && <p className="hand text-center text-lg font-black">Badges will appear after quests are submitted.</p>}
         </section>
         <h2 className="mb-3 text-xs font-black uppercase">Recently Earned</h2>
         <div className="space-y-4">

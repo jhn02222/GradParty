@@ -48,7 +48,7 @@ export function PolaroidCard({ label, sublabel, initials, photoUrl, color = "fro
     <figure className={`relative bg-uga-paper p-3 pb-8 text-zinc-950 shadow-taped ${rotate} ${className}`}>
       <TapeCorner corners={["tl", "tr"]} />
       <div className={`photo-gradient flex aspect-square items-center justify-center bg-gradient-to-br ${color} text-4xl font-black text-white`}>
-        {photoUrl && (photoUrl.startsWith("http") || photoUrl.startsWith("data:")) ? (
+        {photoUrl && (photoUrl.startsWith("http") || photoUrl.startsWith("data:") || photoUrl.startsWith("/api/files")) ? (
           <img src={photoUrl} alt={label || "Uploaded photo"} className="h-full w-full object-cover" />
         ) : (
           children || photoUrl || initials
@@ -73,7 +73,9 @@ export function LeaderboardRow({ user, emphasis = false }) {
   return (
     <li className={`torn-soft grid grid-cols-[44px_48px_1fr_82px_70px] items-center gap-2 px-3 py-2 text-zinc-950 shadow-paper ${emphasis ? "bg-uga-paper text-lg font-black" : "bg-uga-paper/95"} ${user.rank % 2 ? "-rotate-1" : "rotate-1"}`}>
       <span className={`grid h-9 w-9 place-items-center font-black ${emphasis ? "bg-uga-red text-white" : "bg-zinc-950 text-white"}`}>{user.rank}</span>
-      <span className="grid h-11 w-11 place-items-center bg-zinc-900 text-xs font-black text-white">{user.photo}</span>
+      <span className="grid h-11 w-11 place-items-center overflow-hidden bg-zinc-900 text-xs font-black text-white">
+        {user.photoUrl?.startsWith("/api/files") || user.photoUrl?.startsWith("http") ? <img src={user.photoUrl} alt={user.name} className="h-full w-full object-cover" /> : user.photo}
+      </span>
       <span className="hand truncate text-xl font-bold">{user.name}</span>
       <span className="text-right font-black text-uga-red">{user.points}</span>
       <span className="text-right font-black">{user.drinks} CUP</span>
@@ -84,7 +86,9 @@ export function LeaderboardRow({ user, emphasis = false }) {
 export function LiveFeedItem({ item, index = 0, compact = false }) {
   return (
     <article className={`torn-soft grid grid-cols-[44px_1fr_48px] items-center gap-2 bg-uga-paper px-3 py-3 text-zinc-950 shadow-paper ${index % 2 ? "rotate-1" : "-rotate-1"}`}>
-      <span className="grid h-11 w-11 place-items-center border-4 border-white bg-zinc-900 text-xs font-black text-white shadow-paper">{item.photo}</span>
+      <span className="grid h-11 w-11 place-items-center overflow-hidden border-4 border-white bg-zinc-900 text-xs font-black text-white shadow-paper">
+        {item.photoUrl?.startsWith("/api/files") || item.photoUrl?.startsWith("http") ? <img src={item.photoUrl} alt={item.user} className="h-full w-full object-cover" /> : item.photo}
+      </span>
       <p className={`${compact ? "text-xs" : "text-sm"} leading-tight`}>
         <b>{item.user}</b> {item.action}
         <span className="block text-[10px] font-bold text-zinc-600">{item.time}</span>

@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { BottomNav, PolaroidCard, RansomTitle, RedTornButton } from "../components/ScrapbookComponents";
-import { gallery } from "../data/mockData";
 
 export default function GalleryPage() {
-  const [shots, setShots] = useState(gallery);
+  const [shots, setShots] = useState([]);
   const tabs = ["All", "Drinks", "Photos", "Badges"];
 
   useEffect(() => {
@@ -27,7 +26,7 @@ export default function GalleryPage() {
         <div className="columns-2 gap-4">
           {shots.map((shot, index) => (
             <PolaroidCard
-              key={shot.user + shot.quest}
+              key={shot.id}
               label={shot.user}
               sublabel={`${shot.quest} +${shot.points}`}
               initials={shot.user.split(" ").map((part) => part[0]).join("")}
@@ -38,6 +37,7 @@ export default function GalleryPage() {
             />
           ))}
         </div>
+        {shots.length === 0 && <p className="hand mt-10 text-center text-2xl font-black">No photos yet. Upload the first proof.</p>}
         <RedTornButton className="fixed bottom-24 left-1/2 z-30 w-[min(340px,calc(100%-40px))] -translate-x-1/2">Upload Photo</RedTornButton>
       </section>
       <BottomNav />

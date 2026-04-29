@@ -2,22 +2,27 @@
 
 import { useEffect, useState } from "react";
 import { BottomNav, PolaroidCard, RansomTitle, TornPaperCard } from "../components/ScrapbookComponents";
-import { currentUser } from "../data/mockData";
 
 export default function ProfilePage() {
-  const [profile, setProfile] = useState(currentUser);
+  const [profile, setProfile] = useState({ name: "New Grad", photo: "NG", drinks: 0, points: 0, rank: "-", badges: 0 });
   useEffect(() => {
     const userId = localStorage.getItem("gradPartyUserId");
     fetch(`/api/profile${userId ? `?userId=${userId}` : ""}`)
       .then((response) => response.json())
-      .then((data) => data.user && setProfile(data.user))
+      .then((data) => {
+        if (data.user) setProfile(data.user);
+        else {
+          const guestName = localStorage.getItem("gradPartyGuestName");
+          if (guestName) setProfile({ name: guestName, photo: guestName.slice(0, 2).toUpperCase(), drinks: 0, points: 0, rank: "-", badges: 0 });
+        }
+      })
       .catch(() => {});
   }, []);
 
   const stats = [
     ["Drinks", profile.drinks],
     ["Points", profile.points],
-    ["Rank", profile.rank ? `${profile.rank}` : currentUser.rank],
+    ["Rank", profile.rank ? `${profile.rank}` : "-"],
     ["Badges", profile.badges],
   ];
   const menu = ["My Submissions", "My Badges", "My Stats", "Settings"];

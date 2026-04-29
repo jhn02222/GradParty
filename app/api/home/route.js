@@ -7,12 +7,11 @@ export async function GET(request) {
   await ensureSeedData();
   const userId = new URL(request.url).searchParams.get("userId");
   const leaders = await rankedUsers(100);
-  const fallback = leaders[0];
   const dbUser = userId
     ? await prisma.user.findUnique({ where: { id: userId }, include: { _count: { select: { badges: true } } } })
     : null;
-  const rank = dbUser ? leaders.find((user) => user.id === dbUser.id)?.rank || leaders.length : fallback?.rank;
-  const user = dbUser ? userShape(dbUser, rank) : fallback;
+  const rank = dbUser ? leaders.find((user) => user.id === dbUser.id)?.rank || leaders.length : null;
+  const user = dbUser ? userShape(dbUser, rank) : null;
   const feed = await prisma.feedItem.findMany({
     orderBy: { createdAt: "desc" },
     take: 5,

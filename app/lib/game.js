@@ -10,6 +10,7 @@ export function feedShape(item) {
     time: timeAgo(item.createdAt),
     icon: item.icon || "!",
     photo: item.user?.photoUrl || name.slice(0, 2).toUpperCase(),
+    photoUrl: item.user?.photoUrl || "",
   };
 }
 

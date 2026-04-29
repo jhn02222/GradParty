@@ -36,32 +36,38 @@ export default function JoinPage() {
     }
   }
 
-  function saveProfile() {
+  async function saveProfile(event) {
+    event.preventDefault();
     if (saving) return;
+    if (uploadingPhoto) {
+      setError("Wait for your photo to finish uploading.");
+      return;
+    }
     const guestName = name.trim() || "Chris J.";
     setSaving(true);
     setError("");
     localStorage.setItem("gradPartyGuestName", guestName);
     localStorage.setItem("gradPartyGuestNickname", nickname.trim());
 
-    fetch("/api/join", {
+    try {
+      const response = await fetch("/api/join", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        keepalive: true,
         body: JSON.stringify({
           name: guestName,
           nickname,
           photoUrl,
         }),
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.user?.id) localStorage.setItem("gradPartyUserId", data.user.id);
-      })
-      .catch((joinError) => {
-        console.error(joinError);
-        setError("Could not save to the leaderboard yet, but you can still play.");
       });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || "Could not create user");
+      if (data.user?.id) localStorage.setItem("gradPartyUserId", data.user.id);
+      window.location.href = "/home";
+    } catch (joinError) {
+      console.error(joinError);
+      setError("Could not save your profile. Check Railway variables/logs.");
+      setSaving(false);
+    }
   }
 
   return (
@@ -88,13 +94,13 @@ export default function JoinPage() {
             className="torn-soft w-full bg-uga-paper px-5 py-4 text-center font-black text-zinc-950 placeholder:text-zinc-600"
           />
         </div>
-        <a
-          href="/home"
+        <button
+          type="button"
           onClick={saveProfile}
           className="torn relative inline-flex min-h-12 w-full items-center justify-center bg-uga-red px-6 py-3 text-center text-lg font-black uppercase text-white shadow-paper transition hover:scale-[1.02] active:scale-95"
         >
           {saving ? "MAKING YOUR CARD..." : "LET'S GO! (Start the Quest)"}
-        </a>
+        </button>
         {error && <p className="hand text-center text-sm font-bold text-uga-red">{error}</p>}
       </section>
     </main>

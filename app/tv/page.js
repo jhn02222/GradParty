@@ -2,16 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { LeaderboardRow, LiveFeedItem, PolaroidCard, RansomTitle, RedTornButton, TornPaperCard } from "../components/ScrapbookComponents";
-import { feed, gallery, users } from "../data/mockData";
 
 export default function TvPage() {
   const [data, setData] = useState(null);
-  const leaders = data?.users || users;
+  const leaders = data?.users || [];
   const totalDrinks = data?.totals?.drinks ?? leaders.reduce((sum, user) => sum + user.drinks, 0);
   const totalPlayers = data?.totals?.players ?? leaders.length;
   const totalQuests = data?.totals?.quests ?? leaders.reduce((sum, user) => sum + user.points, 0);
-  const liveFeed = data?.feed || feed;
-  const questCam = data?.gallery?.length ? data.gallery : gallery;
+  const liveFeed = data?.feed || [];
+  const questCam = data?.gallery || [];
 
   useEffect(() => {
     function load() {
@@ -52,6 +51,7 @@ export default function TvPage() {
           <p className="hand mb-3 text-xl font-bold uppercase">Top grads ranking</p>
           <ol className="space-y-2">
             {leaders.map((user, index) => <LeaderboardRow key={user.id || user.name} user={user} emphasis={index < 3} />)}
+            {leaders.length === 0 && <TornPaperCard className="p-8 text-center text-3xl font-black">Waiting for the first guest to join.</TornPaperCard>}
           </ol>
         </section>
         <aside className="space-y-4">
@@ -64,6 +64,7 @@ export default function TvPage() {
             <RansomTitle size="text-2xl" className="mb-4">LIVE FEED</RansomTitle>
             <div className="space-y-3">
               {liveFeed.slice(0, 5).map((item, index) => <LiveFeedItem key={item.id || item.action} item={item} index={index} compact />)}
+              {liveFeed.length === 0 && <p className="hand text-center text-uga-paper">No activity yet.</p>}
             </div>
           </section>
           <section className="rounded-lg border border-uga-paper/35 bg-black/35 p-4">

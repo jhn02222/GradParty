@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { BottomNav, PolaroidCard, RansomTitle, RedTornButton, TornPaperCard } from "../components/ScrapbookComponents";
-import { currentUser, feed } from "../data/mockData";
 
 export default function HomePage() {
   const [data, setData] = useState(null);
@@ -14,16 +13,16 @@ export default function HomePage() {
       .then((response) => response.json())
       .then((homeData) => {
         if (!userId && guestName) {
-          homeData.user = { ...homeData.user, name: guestName, photo: guestName.slice(0, 2).toUpperCase() };
+          homeData.user = { name: guestName, photo: guestName.slice(0, 2).toUpperCase(), points: 0, drinks: 0, badges: 0, rank: "-" };
         }
         setData(homeData);
       })
       .catch(() => {});
   }, []);
 
-  const user = data?.user || currentUser;
-  const liveFeed = data?.feed || feed;
-  const nextBadge = data?.nextBadge || { name: "3-Peat", current: 2, target: 3 };
+  const user = data?.user || { name: "New Grad", photo: "NG", points: 0, drinks: 0, badges: 0, rank: "-" };
+  const liveFeed = data?.feed || [];
+  const nextBadge = data?.nextBadge || { name: "3-Peat", current: 0, target: 3 };
   const stats = [
     ["Drinks", data?.stats?.drinks ?? user.drinks],
     ["Points", data?.stats?.points ?? user.points],
@@ -36,7 +35,7 @@ export default function HomePage() {
       <section className="mobile-page safe-top">
         <header className="mb-8 flex items-center justify-between">
           <RansomTitle size="text-2xl">GRAD PARTY</RansomTitle>
-          <div className="grid h-14 w-14 place-items-center overflow-hidden border-4 border-uga-paper bg-zinc-900 font-black text-white shadow-paper">{user.photoUrl?.startsWith("data:") || user.photoUrl?.startsWith("http") ? <img src={user.photoUrl} alt={user.name} className="h-full w-full object-cover" /> : user.photo}</div>
+          <div className="grid h-14 w-14 place-items-center overflow-hidden border-4 border-uga-paper bg-zinc-900 font-black text-white shadow-paper">{isImageUrl(user.photoUrl) ? <img src={user.photoUrl} alt={user.name} className="h-full w-full object-cover" /> : user.photo}</div>
         </header>
         <h2 className="hand mb-5 text-4xl font-black">Hey, {user.name}</h2>
         <div className="grid grid-cols-2 gap-3">
@@ -67,10 +66,19 @@ export default function HomePage() {
                 <b>{item.user}</b> {item.action} <span className="font-black text-uga-red">+{item.points}</span>
               </TornPaperCard>
             ))}
+            {liveFeed.length === 0 && (
+              <TornPaperCard className="p-4 text-sm">
+                No activity yet. Submit the first quest.
+              </TornPaperCard>
+            )}
           </div>
         </section>
       </section>
       <BottomNav />
     </main>
   );
+}
+
+function isImageUrl(value) {
+  return value?.startsWith("http") || value?.startsWith("data:") || value?.startsWith("/api/files");
 }

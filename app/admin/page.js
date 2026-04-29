@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { PolaroidCard, RansomTitle, RedTornButton, TornPaperCard } from "../components/ScrapbookComponents";
-import { submissions } from "../data/mockData";
 
 export default function AdminPage() {
-  const [items, setItems] = useState(submissions);
+  const [items, setItems] = useState([]);
   const [pin, setPin] = useState("");
   const [message, setMessage] = useState("");
 

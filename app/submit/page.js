@@ -3,11 +3,17 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { BottomNav, PhotoUploadBox, RansomTitle, RedTornButton, TapeCorner } from "../components/ScrapbookComponents";
-import { drinks, quests } from "../data/mockData";
+
+const drinks = [
+  { title: "Beer", points: 5, drinks: 1, tone: "amber" },
+  { title: "Seltzer", points: 5, drinks: 1, tone: "silver" },
+  { title: "Cocktail", points: 10, drinks: 1, tone: "red" },
+  { title: "Mocktail", points: 10, drinks: 0, tone: "gold" },
+];
 
 export default function SubmitPage() {
   const [selected, setSelected] = useState(drinks[2]);
-  const [liveQuests, setLiveQuests] = useState(quests);
+  const [liveQuests, setLiveQuests] = useState([]);
   const [quest, setQuest] = useState(null);
   const [caption, setCaption] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
@@ -20,15 +26,16 @@ export default function SubmitPage() {
     fetch("/api/quests")
       .then((response) => response.json())
       .then((data) => {
-        const all = data.quests || quests;
+        const all = data.quests || [];
         setLiveQuests(all);
         setQuest(all.find((item) => item.category === "Photo") || all[0]);
       })
-      .catch(() => setQuest(quests.find((item) => item.category === "Photo")));
+      .catch(() => setQuest(null));
   }, []);
 
   async function submitProof() {
     const userId = localStorage.getItem("gradPartyUserId");
+    const userName = localStorage.getItem("gradPartyGuestName");
     const activeQuest = liveQuests.find((item) => item.category === "Drinks") || quest;
     if (!activeQuest?.id) return;
     if (uploadingPhoto) {
@@ -41,6 +48,7 @@ export default function SubmitPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userId,
+        userName,
         questId: activeQuest.id,
         caption,
         photoUrl,
@@ -48,7 +56,7 @@ export default function SubmitPage() {
         drinks: selected.drinks,
       }),
     });
-    setStatus(response.ok ? "Pending review!" : "Could not submit. Try again.");
+    setStatus(response.ok ? "Uploaded! Points added automatically." : "Could not submit. Try again.");
   }
 
   async function handleProofPhoto(file) {

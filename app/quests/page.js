@@ -2,16 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { BadgeIcon, BottomNav, RansomTitle, RedTornButton, TornPaperCard } from "../components/ScrapbookComponents";
-import { quests } from "../data/mockData";
 
 export default function QuestsPage() {
-  const [liveQuests, setLiveQuests] = useState(quests);
+  const [liveQuests, setLiveQuests] = useState([]);
   const tabs = ["All", "Drinks", "Photo", "Party", "Bonus"];
 
   useEffect(() => {
     fetch("/api/quests")
       .then((response) => response.json())
-      .then((data) => setLiveQuests(data.quests || quests))
+      .then((data) => setLiveQuests(data.quests || []))
       .catch(() => {});
   }, []);
 
@@ -23,6 +22,7 @@ export default function QuestsPage() {
           {tabs.map((tab, index) => (
             <button key={tab} className={`torn-soft shrink-0 px-4 py-2 text-xs font-black uppercase ${index === 0 ? "bg-uga-red text-white" : "bg-uga-paper text-zinc-950"}`}>{tab}</button>
           ))}
+          {liveQuests.length === 0 && <p className="hand text-center text-xl font-black">Quests are loading. If this stays empty, check the database migration.</p>}
         </div>
         <div className="space-y-4">
           {liveQuests.map((quest, index) => (
