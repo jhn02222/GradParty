@@ -73,7 +73,9 @@ export default function TvPage() {
             <TornPaperCard className="p-5 rotate-1">
               <p className="hand text-3xl font-black leading-tight">EAT. DRINK.</p>
               <p className="hand text-3xl font-black leading-tight text-uga-red">GO DAWGS.</p>
-              <div className="mt-4 grid h-24 place-items-center border-2 border-dashed border-zinc-900 bg-white/35 font-black">DAWG DOODLE</div>
+              <div className="mt-4 grid h-28 place-items-center overflow-hidden border-2 border-dashed border-zinc-900 bg-white/35">
+                <img src="/assets/DawgGrad.png" alt="Dawg grad" className="h-full w-full object-contain p-2" />
+              </div>
             </TornPaperCard>
           </div>
           <div className="space-y-3">
@@ -103,7 +105,7 @@ export default function TvPage() {
           </ol>
         </section>
 
-        <aside className="min-h-0 overflow-y-auto rounded-lg border border-uga-paper/30 bg-zinc-950/80 p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,.08)]">
+        <aside className="grid min-h-0 grid-rows-[auto_auto_minmax(0,1fr)] overflow-hidden rounded-lg border border-uga-paper/30 bg-zinc-950/80 p-4 shadow-[inset_0_0_0_1px_rgba(255,255,255,.08)]">
           <div className="mb-4 grid grid-cols-[1fr_132px] items-start gap-3">
             <div>
               <p className="inline-block rotate-2 bg-uga-red px-3 py-1 text-sm font-black uppercase text-white">New</p>
@@ -134,26 +136,27 @@ export default function TvPage() {
             </TornPaperCard>
           </div>
 
-          <div className={`mb-4 grid grid-cols-3 gap-3 ${partyCam.length > 6 ? "tv-photo-wall-scroll" : ""}`}>
-            {photoWall.map((shot, index) => (
-              <PolaroidCard
-                key={`${shot.id || shot.user}-${index}`}
-                initials={shot.user.slice(0, 2).toUpperCase()}
-                photoUrl={shot.photoUrl}
-                label={shot.label}
-                sublabel={shot.user}
-                color={shot.color}
-                className="tv-polaroid p-1.5 pb-4"
-                rotate={index % 2 ? "rotate-2" : "-rotate-2"}
-              />
-            ))}
-            {partyCam.length === 0 && (
-              <TornPaperCard className="col-span-2 grid h-56 place-items-center p-5 text-center text-2xl font-black">
-                Photos will show here after proofs are approved.
-              </TornPaperCard>
-            )}
+          <div className="min-h-0 overflow-hidden">
+            <div className={`grid grid-cols-3 gap-3 ${partyCam.length > 6 ? "tv-photo-wall-scroll" : ""}`}>
+              {photoWall.map((shot, index) => (
+                <PolaroidCard
+                  key={`${shot.id || shot.user}-${index}`}
+                  initials={shot.user.slice(0, 2).toUpperCase()}
+                  photoUrl={shot.photoUrl}
+                  label={shot.label}
+                  sublabel={shot.user}
+                  color={shot.color}
+                  className="tv-polaroid p-1.5 pb-4"
+                  rotate={index % 2 ? "rotate-2" : "-rotate-2"}
+                />
+              ))}
+              {partyCam.length === 0 && (
+                <TornPaperCard className="col-span-3 grid h-56 place-items-center p-5 text-center text-2xl font-black">
+                  Photos will show here after proofs are approved.
+                </TornPaperCard>
+              )}
+            </div>
           </div>
-
         </aside>
 
         <div className="col-span-3 self-end overflow-hidden bg-uga-red py-2 text-2xl font-black uppercase text-white shadow-paper">

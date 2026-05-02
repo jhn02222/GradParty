@@ -51,7 +51,10 @@ export default function AdminPage() {
             <RansomTitle size="text-4xl">ADMIN REVIEW</RansomTitle>
             <p className="hand mt-3 text-xl">Approve proof, reject blurry chaos, keep the board moving.</p>
           </div>
-          <a href="/tv" className="torn-soft bg-uga-paper px-5 py-3 text-sm font-black uppercase text-zinc-950 shadow-paper">Open TV Board</a>
+          <div className="flex flex-wrap gap-3">
+            <a href="/admin/leaderboard" className="torn-soft bg-uga-paper px-5 py-3 text-sm font-black uppercase text-zinc-950 shadow-paper">Phone Leaderboard</a>
+            <a href="/tv" className="torn-soft bg-uga-paper px-5 py-3 text-sm font-black uppercase text-zinc-950 shadow-paper">Open TV Board</a>
+          </div>
         </header>
         <div className="mb-6 flex flex-col gap-3 md:flex-row">
           <input

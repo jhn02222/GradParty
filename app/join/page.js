@@ -1,12 +1,39 @@
 "use client";
 
 import { useState } from "react";
-import { Confetti, RansomTitle } from "../components/ScrapbookComponents";
+import { Confetti, PhotoUploadBox, RansomTitle } from "../components/ScrapbookComponents";
 
 export default function JoinPage() {
   const [name, setName] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [photoPreview, setPhotoPreview] = useState("");
+  const [photoStatus, setPhotoStatus] = useState("");
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  async function handleFacePhoto(file) {
+    setPhotoPreview(URL.createObjectURL(file));
+    setUploadingPhoto(true);
+    setPhotoStatus("Uploading face photo...");
+    const form = new FormData();
+    form.append("file", file);
+    form.append("folder", "profiles");
+
+    try {
+      const response = await fetch("/api/upload", { method: "POST", body: form });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Upload failed");
+      setPhotoUrl(data.url);
+      setPhotoStatus("Face photo saved!");
+    } catch (uploadError) {
+      console.error(uploadError);
+      setPhotoUrl("");
+      setPhotoStatus("Photo upload failed. Try another image.");
+    } finally {
+      setUploadingPhoto(false);
+    }
+  }
 
   async function saveProfile(event) {
     event.preventDefault();
@@ -14,6 +41,14 @@ export default function JoinPage() {
     const guestName = name.trim();
     if (!guestName) {
       setError("Add your name first.");
+      return;
+    }
+    if (uploadingPhoto) {
+      setError("Wait for your face photo to finish uploading.");
+      return;
+    }
+    if (!photoUrl) {
+      setError("Add a face photo first.");
       return;
     }
     setSaving(true);
@@ -26,6 +61,7 @@ export default function JoinPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: guestName,
+          photoUrl,
         }),
       });
       const data = await response.json().catch(() => ({}));
@@ -44,7 +80,8 @@ export default function JoinPage() {
       <Confetti />
       <section className="mobile-page flex min-h-[760px] flex-col items-center justify-center gap-7 p-0">
         <RansomTitle size="text-5xl" className="-rotate-2 text-center">GRAD PARTY</RansomTitle>
-        <p className="hand max-w-xs text-center text-2xl font-black">Put your name in and you are in.</p>
+        <p className="hand max-w-xs text-center text-2xl font-black">Add your name and a face photo.</p>
+        <PhotoUploadBox helper="Upload face photo" onPhoto={handleFacePhoto} previewUrl={photoPreview} uploading={uploadingPhoto} status={photoStatus} />
         <label className="sr-only" htmlFor="guest-name">Name</label>
         <input
           id="guest-name"
@@ -58,7 +95,7 @@ export default function JoinPage() {
           onClick={saveProfile}
           className="torn relative inline-flex min-h-12 w-full items-center justify-center bg-uga-red px-6 py-3 text-center text-lg font-black uppercase text-white shadow-paper transition hover:scale-[1.02] active:scale-95"
         >
-          {saving ? "SAVING..." : "JOIN"}
+          {saving ? "SAVING..." : uploadingPhoto ? "PHOTO UPLOADING..." : "JOIN"}
         </button>
         {error && <p className="hand text-center text-sm font-bold text-uga-red">{error}</p>}
       </section>
