@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useEffect } from "react";
-import { BottomNav, RansomTitle, RedTornButton, TapeCorner } from "../components/ScrapbookComponents";
+import { BottomNav, PhotoUploadBox, RansomTitle, RedTornButton, TapeCorner } from "../components/ScrapbookComponents";
 
 const drinks = [
   { title: "Beer", type: "BEER", asset: "/assets/Beer.png", points: 5, drinks: 1 },
@@ -14,6 +14,10 @@ const drinks = [
 export default function SubmitPage() {
   const [selected, setSelected] = useState(drinks[2]);
   const [submissionTarget, setSubmissionTarget] = useState(null);
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [photoPreview, setPhotoPreview] = useState("");
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [photoStatus, setPhotoStatus] = useState("");
   const [status, setStatus] = useState("");
 
   useEffect(() => {
@@ -30,6 +34,14 @@ export default function SubmitPage() {
     const userId = localStorage.getItem("gradPartyUserId");
     const userName = localStorage.getItem("gradPartyGuestName");
     if (!submissionTarget?.id) return;
+    if (uploadingPhoto) {
+      setStatus("Wait for your photo to finish uploading.");
+      return;
+    }
+    if (!photoUrl) {
+      setStatus("Add a photo proof first.");
+      return;
+    }
     setStatus("Submitting...");
     const response = await fetch("/api/submissions", {
       method: "POST",
@@ -39,6 +51,7 @@ export default function SubmitPage() {
         userName,
         questId: submissionTarget.id,
         drinkType: selected.type,
+        photoUrl,
         points: selected.points,
         drinks: selected.drinks,
       }),
@@ -46,11 +59,34 @@ export default function SubmitPage() {
     setStatus(response.ok ? `${selected.title} added!` : "Could not submit. Try again.");
   }
 
+  async function handleProofPhoto(file) {
+    setPhotoPreview(URL.createObjectURL(file));
+    setUploadingPhoto(true);
+    setPhotoStatus("Uploading proof...");
+    const form = new FormData();
+    form.append("file", file);
+    form.append("folder", "submissions");
+
+    try {
+      const response = await fetch("/api/upload", { method: "POST", body: form });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Upload failed");
+      setPhotoUrl(data.url);
+      setPhotoStatus("Proof photo saved!");
+    } catch (uploadError) {
+      console.error(uploadError);
+      setPhotoUrl("");
+      setPhotoStatus("Photo upload failed. Try another image.");
+    } finally {
+      setUploadingPhoto(false);
+    }
+  }
+
   return (
     <main className="paper-bg">
       <section className="mobile-page safe-top">
         <RansomTitle size="text-2xl" className="mb-6 text-center">CHOOSE YOUR DRINK</RansomTitle>
-        <p className="hand mb-5 text-center text-lg font-black">Tap a drink. No photo needed.</p>
+        <p className="hand mb-5 text-center text-lg font-black">Pick a drink and add photo proof.</p>
         <div className="grid grid-cols-2 gap-4">
           {drinks.map((drink, index) => (
             <button
@@ -70,7 +106,8 @@ export default function SubmitPage() {
           ))}
         </div>
         <section className="mt-7 space-y-4">
-          <RedTornButton onClick={submitProof} className="w-full">SUBMIT {selected.title}</RedTornButton>
+          <PhotoUploadBox helper="Upload photo proof" small onPhoto={handleProofPhoto} previewUrl={photoPreview} uploading={uploadingPhoto} status={photoStatus} />
+          <RedTornButton onClick={submitProof} className="w-full">{uploadingPhoto ? "PHOTO UPLOADING..." : `SUBMIT ${selected.title}`}</RedTornButton>
           {status && <p className="hand text-center text-sm font-bold text-uga-red">{status}</p>}
         </section>
       </section>

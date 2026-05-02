@@ -216,9 +216,18 @@ button {
   transform: rotate(7deg);
 }
 
+.tv-photo-wall-scroll {
+  animation: tv-photo-wall-scroll 34s linear infinite;
+}
+
 .tv-score-row {
   clip-path: polygon(0 8%, 6% 4%, 13% 8%, 25% 2%, 42% 6%, 58% 3%, 75% 7%, 92% 2%, 100% 9%, 98% 52%, 100% 91%, 87% 96%, 70% 92%, 52% 98%, 34% 93%, 16% 98%, 2% 92%);
   border-left: 8px solid var(--red);
+}
+
+@keyframes tv-photo-wall-scroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
 }
 
 .nav-safe {

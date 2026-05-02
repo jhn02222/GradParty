@@ -13,6 +13,7 @@ export default function TvPage() {
   const totalPlayers = data?.totals?.players ?? leaders.length;
   const totalProofs = data?.totals?.proofs ?? 0;
   const partyCam = data?.gallery || [];
+  const photoWall = partyCam.length > 6 ? [...partyCam, ...partyCam] : partyCam;
 
   useEffect(() => {
     const savedPin = localStorage.getItem("gradPartyAdminPin") || "";
@@ -133,16 +134,16 @@ export default function TvPage() {
             </TornPaperCard>
           </div>
 
-          <div className="mb-4 grid grid-cols-2 gap-3">
-            {partyCam.map((shot, index) => (
+          <div className={`mb-4 grid grid-cols-3 gap-3 ${partyCam.length > 6 ? "tv-photo-wall-scroll" : ""}`}>
+            {photoWall.map((shot, index) => (
               <PolaroidCard
-                key={shot.id || `${shot.user}-${index}`}
+                key={`${shot.id || shot.user}-${index}`}
                 initials={shot.user.slice(0, 2).toUpperCase()}
                 photoUrl={shot.photoUrl}
                 label={shot.label}
                 sublabel={shot.user}
                 color={shot.color}
-                className="tv-polaroid p-2 pb-5"
+                className="tv-polaroid p-1.5 pb-4"
                 rotate={index % 2 ? "rotate-2" : "-rotate-2"}
               />
             ))}
