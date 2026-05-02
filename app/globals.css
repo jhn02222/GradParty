@@ -57,6 +57,42 @@ button {
   mix-blend-mode: screen;
 }
 
+.tv-collage-bg {
+  position: relative;
+  min-height: 100svh;
+  color: var(--paper);
+  background:
+    radial-gradient(circle at 24% 70%, rgba(27, 189, 189, .52), transparent 0 20rem),
+    radial-gradient(circle at 92% 8%, rgba(186, 12, 47, .22), transparent 0 16rem),
+    linear-gradient(110deg, rgba(13, 118, 125, .92) 0 29%, rgba(7, 9, 10, .94) 29% 100%),
+    #050505;
+}
+
+.tv-collage-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .55;
+  background:
+    radial-gradient(circle, rgba(255,255,255,.55) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(92deg, rgba(255,255,255,.05) 0 1px, transparent 1px 9px),
+    repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 2px, transparent 2px 18px);
+  mix-blend-mode: screen;
+}
+
+.tv-collage-bg::after {
+  content: "";
+  position: fixed;
+  inset: auto 0 0;
+  height: 28%;
+  pointer-events: none;
+  background:
+    linear-gradient(165deg, transparent 0 38%, rgba(247,243,232,.95) 38% 54%, transparent 54%),
+    linear-gradient(11deg, transparent 0 55%, rgba(186,12,47,.86) 55% 67%, transparent 67%);
+  opacity: .16;
+}
+
 .mobile-page {
   width: min(100%, 430px);
   min-height: 100svh;
@@ -151,6 +187,38 @@ button {
     radial-gradient(circle at 28% 26%, rgba(255,255,255,.85) 0 7%, transparent 7% 100%),
     radial-gradient(circle at 62% 31%, rgba(255,255,255,.7) 0 6%, transparent 6% 100%),
     linear-gradient(135deg, var(--tw-gradient-stops));
+}
+
+.tv-polaroid {
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, .14);
+}
+
+.tv-polaroid::before {
+  content: "";
+  position: absolute;
+  left: 30%;
+  top: -10px;
+  width: 56px;
+  height: 20px;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.22) 0 3px, transparent 3px 7px),
+    #f4ca2f;
+  transform: rotate(-5deg);
+  box-shadow: 0 4px 8px rgba(0,0,0,.25);
+  z-index: 2;
+}
+
+.tv-polaroid:nth-child(2n)::before {
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.18) 0 3px, transparent 3px 7px),
+    #e84c9b;
+  transform: rotate(7deg);
+}
+
+.tv-score-row {
+  clip-path: polygon(0 8%, 6% 4%, 13% 8%, 25% 2%, 42% 6%, 58% 3%, 75% 7%, 92% 2%, 100% 9%, 98% 52%, 100% 91%, 87% 96%, 70% 92%, 52% 98%, 34% 93%, 16% 98%, 2% 92%);
+  border-left: 8px solid var(--red);
 }
 
 .nav-safe {
