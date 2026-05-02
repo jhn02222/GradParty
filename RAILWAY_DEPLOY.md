@@ -63,7 +63,7 @@ If you already set commands manually in the Railway dashboard, the checked-in `r
 
 Redeploy the Next.js service.
 
-The app seeds quests and badges automatically on first API request. Real users are created from `/join`.
+The app seeds submission targets and badges automatically on first API request. Real users are created from `/join`.
 
 ## 7. Generate Public URL
 
@@ -75,7 +75,7 @@ Important routes:
 
 - `/join` guest signup
 - `/home` player dashboard
-- `/quests` quest list
+- `/submit` drink and proof submission
 - `/submit` proof upload
 - `/feed` live feed
 - `/gallery` approved photo wall

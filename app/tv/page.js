@@ -8,9 +8,9 @@ export default function TvPage() {
   const leaders = data?.users || [];
   const totalDrinks = data?.totals?.drinks ?? leaders.reduce((sum, user) => sum + user.drinks, 0);
   const totalPlayers = data?.totals?.players ?? leaders.length;
-  const totalQuests = data?.totals?.quests ?? leaders.reduce((sum, user) => sum + user.points, 0);
+  const totalProofs = data?.totals?.proofs ?? 0;
   const liveFeed = data?.feed || [];
-  const questCam = data?.gallery || [];
+  const partyCam = data?.gallery || [];
 
   useEffect(() => {
     function load() {
@@ -37,7 +37,7 @@ export default function TvPage() {
             {[
               ["Total Players", totalPlayers],
               ["Total Drinks", totalDrinks],
-              ["Total Quests", totalQuests],
+              ["Total Proofs", totalProofs],
             ].map(([label, value], index) => (
               <TornPaperCard key={label} rotate={index % 2 ? "rotate-1" : "-rotate-1"} className="p-4">
                 <p className="text-sm font-black uppercase text-uga-red">{label}</p>
@@ -68,10 +68,10 @@ export default function TvPage() {
             </div>
           </section>
           <section className="rounded-lg border border-uga-paper/35 bg-black/35 p-4">
-            <RansomTitle size="text-2xl" className="mb-4">QUEST CAM</RansomTitle>
+            <RansomTitle size="text-2xl" className="mb-4">PARTY CAM</RansomTitle>
             <div className="grid grid-cols-3 gap-2">
-              {questCam.slice(0, 3).map((shot, index) => (
-                <PolaroidCard key={shot.id || shot.user} initials={shot.user.slice(0, 2).toUpperCase()} photoUrl={shot.photoUrl} label={shot.quest} color={shot.color} className="p-2 pb-5" rotate={index % 2 ? "rotate-3" : "-rotate-3"} />
+              {partyCam.slice(0, 3).map((shot, index) => (
+                <PolaroidCard key={shot.id || shot.user} initials={shot.user.slice(0, 2).toUpperCase()} photoUrl={shot.photoUrl} label={shot.label} color={shot.color} className="p-2 pb-5" rotate={index % 2 ? "rotate-3" : "-rotate-3"} />
               ))}
             </div>
             <RedTornButton href="/gallery" className="mt-4 w-full text-sm">View Gallery</RedTornButton>

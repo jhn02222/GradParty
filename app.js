@@ -12,24 +12,24 @@ const players = [
 ];
 
 const activities = [
-  ["Dawgs4Life", "completed Dance Floor Takeover", "+15"],
-  ["Party Animal", "completed Mystery Cup Roulette", "+10"],
+  ["Dawgs4Life", "submitted a dance floor proof", "+15"],
+  ["Party Animal", "logged a drink proof", "+10"],
   ["Kirby's Kid", "earned the badge 3 in a Row", "+20"],
-  ["UGA Legend", "completed Full Squad Photo", "+20"],
-  ["Sic 'Em", "completed Hydration Hero", "+5"],
+  ["UGA Legend", "submitted a full squad photo", "+20"],
+  ["Sic 'Em", "submitted a hydration proof", "+5"],
 ];
 
-const quests = [
-  ["▥", "Mystery Cup Roulette", "Drink something you didn't know was in it", "+10 pts"],
-  ["☷", "Opposite Energy Duo", "Take a pic with someone total opposite of you", "+15 pts"],
-  ["▣", "Dance Floor Takeover", "Get the dance floor going", "+15 pts"],
-  ["♢", "Hydration Hero", "Drink water. Be a legend.", "+5 pts"],
-  ["▤", "Album Cover Drop", "Recreate an album cover with your squad", "+15 pts"],
+const proofIdeas = [
+  ["▥", "Drink Proof", "Log what is in your cup", "+10 pts"],
+  ["☷", "Duo Photo", "Take a pic with someone across the party", "+15 pts"],
+  ["▣", "Dance Floor", "Get the dance floor going", "+15 pts"],
+  ["♢", "Hydration", "Drink water. Be a legend.", "+5 pts"],
+  ["▤", "Album Cover", "Recreate an album cover with your squad", "+15 pts"],
 ];
 
 const awards = [
-  ["▥", "First Sip", "Complete your first drink quest"],
-  ["3", "3 in a Row", "Complete 3 quests in a row"],
+  ["▥", "First Sip", "Submit your first drink proof"],
+  ["3", "3 in a Row", "Submit 3 proofs in a row"],
   ["♢", "Hydration Hero", "Submit a water challenge"],
   ["☷", "Social Butterfly", "Take photos with 3 different people"],
 ];
@@ -81,10 +81,10 @@ function renderFeed() {
     .join("");
 }
 
-function renderQuests() {
-  $("#questList").innerHTML = quests
+function renderProofIdeas() {
+  $("#questList").innerHTML = proofIdeas
     .map(([icon, title, desc, points]) => `
-      <button class="quest-item" data-quest="${title}">
+      <button class="quest-item" data-proof="${title}">
         <span class="quest-icon">${icon}</span>
         <span><b>${title}</b><small>${desc}</small></span>
         <em>${points}</em>
@@ -133,7 +133,7 @@ function readFile(input, targetSelector) {
 function updateProfile() {
   const name = $("#playerName").value.trim() || "Dawg Fan";
   const nick = $("#playerNick").value.trim() || "UGA Legend";
-  localStorage.setItem("gradQuestProfile", JSON.stringify({ name, nick }));
+  localStorage.setItem("gradPartyProfile", JSON.stringify({ name, nick }));
   $("#dashName").textContent = name;
   $("#dashNick").textContent = nick;
   $("#topPlayer").textContent = players[0][0];
@@ -141,7 +141,7 @@ function updateProfile() {
   setTimeout(() => ($("#joinButton").innerHTML = "Let's Go! <span>→</span>"), 1200);
 }
 
-function submitQuest() {
+function submitProof() {
   const caption = $("#captionInput").value.trim();
   const activity = [$("#dashName").textContent, `submitted ${$("#submitTitle").textContent}${caption ? `: ${caption}` : ""}`, "+10"];
   activities.unshift(activity);
@@ -156,7 +156,7 @@ function bindEvents() {
   $("#profileUpload").addEventListener("change", event => readFile(event.target, "#profilePreview"));
   $("#proofUpload").addEventListener("change", event => readFile(event.target, "#proofPreview"));
   $("#joinButton").addEventListener("click", updateProfile);
-  $("#submitButton").addEventListener("click", submitQuest);
+  $("#submitButton").addEventListener("click", submitProof);
 
   document.querySelectorAll("[data-scroll-target]").forEach(button => {
     button.addEventListener("click", () => {
@@ -165,15 +165,15 @@ function bindEvents() {
   });
 
   $("#questList").addEventListener("click", event => {
-    const button = event.target.closest("[data-quest]");
+    const button = event.target.closest("[data-proof]");
     if (!button) return;
-    $("#submitTitle").textContent = button.dataset.quest;
+    $("#submitTitle").textContent = button.dataset.proof;
     document.querySelector(".submit-phone").scrollIntoView({ behavior: "smooth", block: "center" });
   });
 }
 
 function restoreProfile() {
-  const saved = localStorage.getItem("gradQuestProfile");
+  const saved = localStorage.getItem("gradPartyProfile");
   if (!saved) return;
   const { name, nick } = JSON.parse(saved);
   $("#playerName").value = name;
@@ -184,7 +184,7 @@ function restoreProfile() {
 
 renderLeaderboard();
 renderFeed();
-renderQuests();
+renderProofIdeas();
 renderGallery();
 renderAwards();
 restoreProfile();

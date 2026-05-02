@@ -39,10 +39,10 @@ export async function PATCH(request, { params }) {
       await tx.feedItem.create({
         data: {
           userId: submission.userId,
-          type: "QUEST_APPROVED",
-          text: `completed ${submission.quest.title}!`,
+          type: "PROOF_APPROVED",
+          text: submission.drinks ? "logged a drink proof!" : "submitted a party proof!",
           points: submission.points,
-          icon: submission.quest.icon,
+          icon: submission.drinks ? "CUP" : "CAM",
         },
       });
     }

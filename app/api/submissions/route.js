@@ -7,7 +7,7 @@ export async function POST(request) {
   await ensureSeedData();
   const body = await request.json();
   const quest = await prisma.quest.findUnique({ where: { id: body.questId } });
-  if (!quest) return NextResponse.json({ error: "Quest not found" }, { status: 404 });
+  if (!quest) return NextResponse.json({ error: "Submission target not found" }, { status: 404 });
 
   let user = body.userId ? await prisma.user.findUnique({ where: { id: body.userId } }) : null;
   if (!user) {
@@ -46,10 +46,10 @@ export async function POST(request) {
     await tx.feedItem.create({
       data: {
         userId: user.id,
-        type: "QUEST_APPROVED",
-        text: `completed ${quest.title}!`,
+        type: "PROOF_APPROVED",
+        text: drinks ? "logged a drink proof!" : "submitted a party proof!",
         points,
-        icon: quest.icon,
+        icon: drinks ? "CUP" : "CAM",
       },
     });
 

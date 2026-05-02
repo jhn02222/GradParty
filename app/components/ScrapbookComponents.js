@@ -125,8 +125,8 @@ export function BottomNav() {
   const pathname = usePathname();
   const items = [
     ["/home", "HM", "Home"],
-    ["/quests", "Q", "Quests"],
     ["/submit", "+", "Submit"],
+    ["/gallery", "PH", "Gallery"],
     ["/tv", "#", "Leaderboard"],
     ["/profile", "ME", "Profile"],
   ];

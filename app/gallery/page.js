@@ -28,7 +28,7 @@ export default function GalleryPage() {
             <PolaroidCard
               key={shot.id}
               label={shot.user}
-              sublabel={`${shot.quest} +${shot.points}`}
+              sublabel={`${shot.label || "Party proof"} +${shot.points}`}
               initials={shot.user.split(" ").map((part) => part[0]).join("")}
               photoUrl={shot.photoUrl}
               color={shot.color}

@@ -12,11 +12,11 @@ const quests = [
 ];
 
 const badges = [
-  { name: "3 in a Row", icon: "3", description: "Complete 3 approved quests in a row" },
+  { name: "3 in a Row", icon: "3", description: "Submit 3 approved proofs in a row" },
   { name: "Hydration Hero", icon: "H2O", description: "Drink water, be a legend" },
   { name: "Major Character", icon: "*", description: "Serve a photo moment" },
   { name: "Social Butterfly", icon: "SB", description: "Submit a group cheers photo" },
-  { name: "Party Starter", icon: "GO", description: "First approved quest of the night" },
+  { name: "Party Starter", icon: "GO", description: "First approved proof of the night" },
 ];
 
 async function main() {
@@ -36,7 +36,7 @@ async function main() {
     });
   }
 
-  console.log("Seeded quests and badges. Users will be created from the join screen.");
+  console.log("Seeded submission targets and badges. Users will be created from the join screen.");
 }
 
 main()

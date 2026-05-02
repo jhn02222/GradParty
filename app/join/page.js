@@ -99,7 +99,7 @@ export default function JoinPage() {
           onClick={saveProfile}
           className="torn relative inline-flex min-h-12 w-full items-center justify-center bg-uga-red px-6 py-3 text-center text-lg font-black uppercase text-white shadow-paper transition hover:scale-[1.02] active:scale-95"
         >
-          {saving ? "MAKING YOUR CARD..." : "LET'S GO! (Start the Quest)"}
+          {saving ? "MAKING YOUR CARD..." : "LET'S GO!"}
         </button>
         {error && <p className="hand text-center text-sm font-bold text-uga-red">{error}</p>}
       </section>

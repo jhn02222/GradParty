@@ -2,7 +2,7 @@ import "./globals.css";
 
 export const metadata = {
   title: "Grad Party",
-  description: "Scrapbook-style Grad Quest party app",
+  description: "Scrapbook-style grad party app",
 };
 
 export default function RootLayout({ children }) {

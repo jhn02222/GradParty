@@ -13,8 +13,7 @@ const drinks = [
 
 export default function SubmitPage() {
   const [selected, setSelected] = useState(drinks[2]);
-  const [liveQuests, setLiveQuests] = useState([]);
-  const [quest, setQuest] = useState(null);
+  const [submissionTarget, setSubmissionTarget] = useState(null);
   const [caption, setCaption] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
   const [photoPreview, setPhotoPreview] = useState("");
@@ -27,17 +26,15 @@ export default function SubmitPage() {
       .then((response) => response.json())
       .then((data) => {
         const all = data.quests || [];
-        setLiveQuests(all);
-        setQuest(all.find((item) => item.category === "Photo") || all[0]);
+        setSubmissionTarget(all.find((item) => item.category === "Drinks") || all[0]);
       })
-      .catch(() => setQuest(null));
+      .catch(() => setSubmissionTarget(null));
   }, []);
 
   async function submitProof() {
     const userId = localStorage.getItem("gradPartyUserId");
     const userName = localStorage.getItem("gradPartyGuestName");
-    const activeQuest = liveQuests.find((item) => item.category === "Drinks") || quest;
-    if (!activeQuest?.id) return;
+    if (!submissionTarget?.id) return;
     if (uploadingPhoto) {
       setStatus("Wait for the photo upload to finish.");
       return;
@@ -49,7 +46,7 @@ export default function SubmitPage() {
       body: JSON.stringify({
         userId,
         userName,
-        questId: activeQuest.id,
+        questId: submissionTarget.id,
         caption,
         photoUrl,
         points: selected.points,
@@ -103,7 +100,7 @@ export default function SubmitPage() {
           ))}
         </div>
         <section className="mt-7 space-y-4">
-          <p className="hand text-center text-lg font-bold">Also works for: {quest?.title || "photo quests"}</p>
+          <p className="hand text-center text-lg font-bold">Add a photo proof for the board.</p>
           <PhotoUploadBox helper="Upload proof photo" small onPhoto={handleProofPhoto} previewUrl={photoPreview} uploading={uploadingPhoto} status={photoStatus} />
           <label className="sr-only" htmlFor="caption">Caption</label>
           <input id="caption" value={caption} onChange={(event) => setCaption(event.target.value)} placeholder="Add a caption (optional)" className="torn-soft w-full bg-uga-paper px-4 py-3 text-zinc-950 placeholder:text-zinc-500" />

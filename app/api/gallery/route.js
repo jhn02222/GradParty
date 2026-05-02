@@ -14,7 +14,7 @@ export async function GET() {
   const gallery = approved.map((submission, index) => ({
     id: submission.id,
     user: submission.user.name,
-    quest: submission.quest.title,
+    label: submission.drinks ? "Drink proof" : "Party proof",
     points: submission.points,
     photoUrl: submission.photoUrl,
     color: ["from-red-700 to-zinc-950", "from-zinc-200 to-red-800", "from-zinc-900 to-red-600"][index % 3],

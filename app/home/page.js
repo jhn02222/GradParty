@@ -52,12 +52,12 @@ export default function HomePage() {
             <PolaroidCard initials="3" label={nextBadge.name} className="w-24 rotate-[-4deg]" />
             <div className="flex-1">
               <h3 className="hand text-2xl font-black">{nextBadge.name}</h3>
-              <p className="text-sm font-bold">{nextBadge.current} of {nextBadge.target} quest proofs approved.</p>
+              <p className="text-sm font-bold">{nextBadge.current} of {nextBadge.target} proofs approved.</p>
               <div className="mt-3 h-3 bg-zinc-300"><span className="block h-full bg-uga-red" style={{ width: `${(nextBadge.current / nextBadge.target) * 100}%` }} /></div>
             </div>
           </div>
         </TornPaperCard>
-        <RedTornButton href="/quests" className="mt-6 w-full">Browse Quests</RedTornButton>
+        <RedTornButton href="/submit" className="mt-6 w-full">Submit Proof</RedTornButton>
         <section className="mt-7">
           <h3 className="mb-3 text-sm font-black uppercase">Recent Activity</h3>
           <div className="space-y-3">
@@ -68,7 +68,7 @@ export default function HomePage() {
             ))}
             {liveFeed.length === 0 && (
               <TornPaperCard className="p-4 text-sm">
-                No activity yet. Submit the first quest.
+                No activity yet. Submit the first proof.
               </TornPaperCard>
             )}
           </div>

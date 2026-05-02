@@ -31,7 +31,7 @@ export default function AwardsPage() {
               </div>
             ))}
           </div>
-          {items.length === 0 && <p className="hand text-center text-lg font-black">Badges will appear after quests are submitted.</p>}
+          {items.length === 0 && <p className="hand text-center text-lg font-black">Badges will appear after proofs are submitted.</p>}
         </section>
         <h2 className="mb-3 text-xs font-black uppercase">Recently Earned</h2>
         <div className="space-y-4">

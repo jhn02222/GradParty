@@ -73,15 +73,15 @@ export default function AdminPage() {
         {message && <p className="hand mb-5 text-center text-xl font-black text-uga-red">{message}</p>}
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {items.map((submission, index) => (
-            <TornPaperCard key={submission.user + submission.quest} className={`p-5 ${index % 2 ? "rotate-1" : "-rotate-1"}`}>
+            <TornPaperCard key={submission.id} className={`p-5 ${index % 2 ? "rotate-1" : "-rotate-1"}`}>
               <div className="mb-4 flex items-center gap-3">
                 <span className="grid h-12 w-12 place-items-center bg-zinc-950 text-xs font-black text-white">{submission.photo}</span>
                 <div>
                   <h2 className="hand text-2xl font-black">{submission.user}</h2>
-                  <p className="text-xs font-black uppercase text-uga-red">{submission.quest}</p>
+                  <p className="text-xs font-black uppercase text-uga-red">{submission.label}</p>
                 </div>
               </div>
-              <PolaroidCard initials="PROOF" photoUrl={submission.photoUrl} label={submission.quest} color="from-red-800 to-zinc-900" className="mb-4" />
+              <PolaroidCard initials="PROOF" photoUrl={submission.photoUrl} label={submission.label} color="from-red-800 to-zinc-900" className="mb-4" />
               <blockquote className="hand mb-4 border-l-4 border-uga-red pl-3 text-lg font-bold">"{submission.caption}"</blockquote>
               <div className="mb-4 flex justify-between text-sm font-black">
                 <span>+{submission.points} pts</span>
