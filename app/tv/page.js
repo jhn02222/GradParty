@@ -169,18 +169,46 @@ export default function TvPage() {
 
 function TvLeaderboardRow({ user, emphasis = false }) {
   return (
-    <li className={`tv-score-row grid grid-cols-[40px_48px_1fr_58px_72px] items-center gap-2 px-3 py-2 text-zinc-950 shadow-paper ${emphasis ? "bg-uga-paper text-lg font-black" : "bg-uga-paper/95"} ${user.rank % 2 ? "-rotate-1" : "rotate-1"}`}>
+    <li className={`tv-score-row grid grid-cols-[36px_42px_minmax(120px,1fr)_150px_48px_64px] items-center gap-2 px-3 py-2 text-zinc-950 shadow-paper ${emphasis ? "bg-uga-paper text-lg font-black" : "bg-uga-paper/95"} ${user.rank % 2 ? "-rotate-1" : "rotate-1"}`}>
       <span className={`grid h-9 w-9 place-items-center font-black ${emphasis ? "bg-uga-red text-white" : "bg-zinc-950 text-white"}`}>{user.rank}</span>
       <span className="grid h-10 w-10 place-items-center overflow-hidden bg-zinc-900 text-xs font-black text-white">
         {user.photoUrl?.startsWith("/api/files") || user.photoUrl?.startsWith("http") ? <img src={user.photoUrl} alt={user.name} className="h-full w-full object-cover" /> : user.photo}
       </span>
       <span className="hand truncate text-xl font-bold">{user.name}</span>
+      <DrinkTypeIcons counts={user.drinkCounts || {}} />
       <span className="text-right font-black text-uga-red">{user.points}</span>
       <span className="flex items-center justify-end gap-1 font-black">
         {user.drinks}
         <RedCupIcon />
       </span>
     </li>
+  );
+}
+
+const drinkIconAssets = [
+  ["BEER", "/assets/Beer.png", "beer"],
+  ["SELTZER", "/assets/Seltzer.png", "seltzer"],
+  ["JELLO_SHOT", "/assets/jelloShots.png", "jello shot"],
+  ["SHOT", "/assets/shots.png", "shot"],
+];
+
+function DrinkTypeIcons({ counts }) {
+  return (
+    <span className="flex min-w-0 items-center gap-2 overflow-hidden">
+      {drinkIconAssets.map(([type, src, label]) => {
+        const count = counts[type] || 0;
+        if (!count) return null;
+        const visible = Math.min(count, 3);
+        return (
+          <span key={type} className="flex items-center gap-0.5" aria-label={`${count} ${label}`}>
+            {Array.from({ length: visible }).map((_, index) => (
+              <img key={index} src={src} alt="" className="h-7 w-7 object-contain" />
+            ))}
+            {count > visible && <b className="ml-0.5 text-xs">x{count}</b>}
+          </span>
+        );
+      })}
+    </span>
   );
 }
 

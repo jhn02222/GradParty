@@ -9,7 +9,7 @@ export async function GET(request) {
   if (unauthorized) return unauthorized;
   await ensureSeedData();
   const users = await rankedUsers(10);
-  const [totalPlayers, totalDrinks, totalProofs, feed, gallery] = await Promise.all([
+  const [totalPlayers, totalDrinks, totalProofs, feed, gallery, drinkTypeCounts] = await Promise.all([
     prisma.user.count(),
     prisma.user.aggregate({ _sum: { drinks: true } }),
     prisma.submission.count({ where: { status: "APPROVED" } }),
@@ -20,10 +20,27 @@ export async function GET(request) {
       take: 3,
       include: { user: true, quest: true },
     }),
+    prisma.submission.groupBy({
+      by: ["userId", "drinkType"],
+      where: {
+        status: "APPROVED",
+        drinkType: { not: null },
+      },
+      _sum: { drinks: true },
+    }),
   ]);
+  const drinkCountsByUser = drinkTypeCounts.reduce((acc, item) => {
+    if (!item.userId || !item.drinkType) return acc;
+    acc[item.userId] ||= {};
+    acc[item.userId][item.drinkType] = item._sum.drinks || 0;
+    return acc;
+  }, {});
 
   return NextResponse.json({
-    users,
+    users: users.map((user) => ({
+      ...user,
+      drinkCounts: drinkCountsByUser[user.id] || {},
+    })),
     totals: {
       players: totalPlayers,
       drinks: totalDrinks._sum.drinks || 0,

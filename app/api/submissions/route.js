@@ -19,6 +19,7 @@ export async function POST(request) {
 
   const points = Number(body.points ?? quest.points);
   const drinks = Number(body.drinks ?? quest.drinks);
+  const drinkType = ["BEER", "SELTZER", "JELLO_SHOT", "SHOT"].includes(body.drinkType) ? body.drinkType : null;
 
   const submission = await prisma.$transaction(async (tx) => {
     const created = await tx.submission.create({
@@ -27,6 +28,7 @@ export async function POST(request) {
         questId: quest.id,
         photoUrl: body.photoUrl || null,
         caption: body.caption || null,
+        drinkType,
         status: "APPROVED",
         points,
         drinks,
