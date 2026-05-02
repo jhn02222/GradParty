@@ -2,8 +2,11 @@ import { NextResponse } from "next/server";
 import { prisma } from "../../lib/prisma";
 import { feedShape, rankedUsers } from "../../lib/game";
 import { ensureSeedData } from "../../lib/seed";
+import { requireAdmin } from "../../lib/adminAuth";
 
-export async function GET() {
+export async function GET(request) {
+  const unauthorized = requireAdmin(request);
+  if (unauthorized) return unauthorized;
   await ensureSeedData();
   const users = await rankedUsers(10);
   const [totalPlayers, totalDrinks, totalProofs, feed, gallery] = await Promise.all([

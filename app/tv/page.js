@@ -5,6 +5,9 @@ import { PolaroidCard, RansomTitle, RedTornButton, TornPaperCard } from "../comp
 
 export default function TvPage() {
   const [data, setData] = useState(null);
+  const [pin, setPin] = useState("");
+  const [authorized, setAuthorized] = useState(false);
+  const [message, setMessage] = useState("");
   const leaders = data?.users || [];
   const totalDrinks = data?.totals?.drinks ?? leaders.reduce((sum, user) => sum + user.drinks, 0);
   const totalPlayers = data?.totals?.players ?? leaders.length;
@@ -19,13 +22,50 @@ export default function TvPage() {
   ].slice(0, 4);
 
   useEffect(() => {
-    function load() {
-      fetch("/api/tv").then((response) => response.json()).then(setData).catch(() => {});
-    }
-    load();
-    const interval = setInterval(load, 15000);
+    const savedPin = localStorage.getItem("gradPartyAdminPin") || "";
+    setPin(savedPin);
+    if (!savedPin) return;
+    load(savedPin);
+    const interval = setInterval(() => load(savedPin), 15000);
     return () => clearInterval(interval);
   }, []);
+
+  async function load(adminPin = pin) {
+    const response = await fetch("/api/tv", { headers: adminPin ? { "x-admin-pin": adminPin } : {} });
+    const tvData = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      setAuthorized(false);
+      setMessage(tvData.error || "Admin PIN required");
+      return;
+    }
+    localStorage.setItem("gradPartyAdminPin", adminPin);
+    setAuthorized(true);
+    setMessage("");
+    setData(tvData);
+  }
+
+  if (!authorized) {
+    return (
+      <main className="paper-bg grid min-h-svh place-items-center px-5">
+        <section className="w-full max-w-sm text-center">
+          <RansomTitle size="text-4xl" className="mb-7">TV BOARD</RansomTitle>
+          <TornPaperCard className="p-6">
+            <p className="mb-4 text-sm font-black uppercase text-uga-red">Admin Only</p>
+            <label className="sr-only" htmlFor="admin-pin">Admin PIN</label>
+            <input
+              id="admin-pin"
+              value={pin}
+              onChange={(event) => setPin(event.target.value)}
+              placeholder="Admin PIN"
+              className="torn-soft mb-4 w-full bg-white px-4 py-3 text-center font-black text-zinc-950 placeholder:text-zinc-500"
+            />
+            <RedTornButton onClick={() => load(pin)} className="w-full">Open Leaderboard</RedTornButton>
+            {message && <p className="hand mt-4 text-sm font-black text-uga-red">{message}</p>}
+          </TornPaperCard>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="tv-collage-bg h-svh overflow-hidden p-4">
@@ -117,7 +157,6 @@ export default function TvPage() {
             )}
           </div>
 
-          <RedTornButton href="/gallery" className="mt-4 w-full text-sm">View Gallery</RedTornButton>
         </aside>
 
         <div className="col-span-3 self-end overflow-hidden bg-uga-red py-2 text-2xl font-black uppercase text-white shadow-paper">
@@ -147,8 +186,6 @@ function TvLeaderboardRow({ user, emphasis = false }) {
 
 function RedCupIcon() {
   return (
-    <span className="red-cup-icon" aria-label="cups">
-      <span className="red-cup-icon-mark">G</span>
-    </span>
+    <img src="/assets/red_cup.png" alt="cups" className="h-8 w-8 object-contain" />
   );
 }

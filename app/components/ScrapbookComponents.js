@@ -126,13 +126,10 @@ export function BottomNav() {
   const items = [
     ["/home", "HM", "Home"],
     ["/submit", "+", "Submit"],
-    ["/gallery", "PH", "Gallery"],
-    ["/tv", "#", "Leaderboard"],
-    ["/profile", "ME", "Profile"],
   ];
   return (
     <nav className="nav-safe fixed inset-x-0 bottom-0 z-40 mx-auto max-w-[430px] bg-black/95 px-3 pt-2 text-uga-paper shadow-[0_-12px_30px_rgba(0,0,0,.45)]">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-center gap-12">
         {items.map(([href, icon, label]) => {
           const active = pathname === href;
           return (

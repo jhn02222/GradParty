@@ -221,54 +221,6 @@ button {
   border-left: 8px solid var(--red);
 }
 
-.red-cup-icon {
-  position: relative;
-  display: inline-grid;
-  place-items: center;
-  width: 22px;
-  height: 25px;
-  color: white;
-  filter: drop-shadow(0 2px 1px rgba(0,0,0,.32));
-}
-
-.red-cup-icon::before {
-  content: "";
-  position: absolute;
-  inset: 3px 3px 1px;
-  background:
-    linear-gradient(90deg, rgba(255,255,255,.22), transparent 32% 70%, rgba(0,0,0,.22)),
-    #b70d24;
-  clip-path: polygon(9% 0, 91% 0, 76% 100%, 24% 100%);
-  border-radius: 2px 2px 5px 5px;
-}
-
-.red-cup-icon::after {
-  content: "";
-  position: absolute;
-  left: 2px;
-  right: 2px;
-  top: 0;
-  height: 7px;
-  border-radius: 999px;
-  background: linear-gradient(#fff, #d8d4ce);
-  box-shadow: inset 0 -2px 0 rgba(0,0,0,.12);
-}
-
-.red-cup-icon-mark {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  width: 13px;
-  height: 8px;
-  place-items: center;
-  border: 1.6px solid white;
-  border-radius: 999px;
-  font-family: Impact, "Arial Black", sans-serif;
-  font-size: 7px;
-  line-height: 1;
-  transform: translateY(3px);
-}
-
 .nav-safe {
   padding-bottom: max(12px, env(safe-area-inset-bottom));
 }
