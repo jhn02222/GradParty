@@ -137,7 +137,18 @@ function TvLeaderboardRow({ user, emphasis = false }) {
       </span>
       <span className="hand truncate text-xl font-bold">{user.name}</span>
       <span className="text-right font-black text-uga-red">{user.points}</span>
-      <span className="text-right font-black">{user.drinks} CUP</span>
+      <span className="flex items-center justify-end gap-1 font-black">
+        {user.drinks}
+        <RedCupIcon />
+      </span>
     </li>
+  );
+}
+
+function RedCupIcon() {
+  return (
+    <span className="red-cup-icon" aria-label="cups">
+      <span className="red-cup-icon-mark">G</span>
+    </span>
   );
 }
