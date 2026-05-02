@@ -161,17 +161,7 @@ button {
   animation: ticker 24s linear infinite;
 }
 
-.party-photo-scroll {
-  width: max-content;
-  animation: party-photo-scroll 30s linear infinite;
-}
-
 @keyframes ticker {
   from { transform: translateX(100%); }
   to { transform: translateX(-100%); }
-}
-
-@keyframes party-photo-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-33.333%); }
 }

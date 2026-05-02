@@ -10,7 +10,13 @@ export default function TvPage() {
   const totalPlayers = data?.totals?.players ?? leaders.length;
   const totalProofs = data?.totals?.proofs ?? 0;
   const partyCam = data?.gallery || [];
-  const photoLoop = partyCam.length ? [...partyCam, ...partyCam, ...partyCam] : [];
+  const drinkShots = partyCam.filter((shot) => shot.label === "Drink proof");
+  const photoShots = partyCam.filter((shot) => shot.label !== "Drink proof");
+  const featuredShots = [
+    ...drinkShots.slice(0, 2),
+    ...photoShots.slice(0, 2),
+    ...partyCam.filter((shot) => ![...drinkShots.slice(0, 2), ...photoShots.slice(0, 2)].some((featured) => featured.id === shot.id)),
+  ].slice(0, 4);
 
   useEffect(() => {
     function load() {
@@ -23,8 +29,8 @@ export default function TvPage() {
 
   return (
     <main className="paper-bg h-svh overflow-hidden p-4">
-      <section className="mx-auto grid h-full max-w-[1920px] grid-cols-[250px_minmax(560px,0.82fr)_minmax(430px,0.58fr)] grid-rows-[238px_minmax(0,1fr)_54px] gap-4">
-        <aside className="row-span-2 flex min-h-0 flex-col justify-between border-r-2 border-uga-paper/40 pr-4">
+      <section className="mx-auto grid h-full max-w-[1920px] grid-cols-[250px_minmax(560px,0.85fr)_minmax(430px,0.55fr)] grid-rows-[minmax(0,1fr)_54px] gap-4">
+        <aside className="flex min-h-0 flex-col justify-between border-r-2 border-uga-paper/40 pr-4">
           <div>
             <RansomTitle size="text-4xl" className="mb-5">GRAD PARTY</RansomTitle>
             <TornPaperCard className="p-5">
@@ -47,34 +53,6 @@ export default function TvPage() {
           </div>
         </aside>
 
-        <section className="col-span-2 min-w-0 overflow-hidden rounded-lg border border-uga-paper/35 bg-black/35 p-4">
-          <div className="mb-3 flex items-center justify-between gap-5">
-            <RansomTitle size="text-4xl">PARTY CAM</RansomTitle>
-            <RedTornButton href="/gallery" className="min-h-10 px-5 py-2 text-sm">View Gallery</RedTornButton>
-          </div>
-          <div className="relative overflow-hidden">
-            <div className={`flex gap-5 ${photoLoop.length ? "party-photo-scroll" : ""}`}>
-              {photoLoop.map((shot, index) => (
-                <PolaroidCard
-                  key={`${shot.id || shot.user}-${index}`}
-                  initials={shot.user.slice(0, 2).toUpperCase()}
-                  photoUrl={shot.photoUrl}
-                  label={shot.user}
-                  sublabel={shot.label}
-                  color={shot.color}
-                  className="w-36 shrink-0 p-2 pb-5"
-                  rotate={index % 2 ? "rotate-2" : "-rotate-2"}
-                />
-              ))}
-              {photoLoop.length === 0 && (
-                <TornPaperCard className="grid h-36 w-full place-items-center p-5 text-center text-2xl font-black">
-                  Photos will scroll here after the first proof is approved.
-                </TornPaperCard>
-              )}
-            </div>
-          </div>
-        </section>
-
         <section className="min-h-0 px-1">
           <RansomTitle size="text-5xl" className="mb-2 text-center">LEADERBOARD</RansomTitle>
           <p className="hand mb-3 text-lg font-bold uppercase">Top grads ranking</p>
@@ -84,23 +62,54 @@ export default function TvPage() {
           </ol>
         </section>
 
-        <aside className="min-h-0 space-y-4 overflow-hidden">
-          <TornPaperCard className="p-5 text-center">
-            <p className="text-sm font-black uppercase">Total Drinks</p>
-            <b className="text-6xl text-uga-red">{totalDrinks}</b>
-            <p className="font-black">CUP COUNT</p>
-          </TornPaperCard>
-          <TornPaperCard className="p-5 text-center">
-            <p className="text-sm font-black uppercase">Approved Proofs</p>
-            <b className="text-6xl text-uga-red">{totalProofs}</b>
-            <p className="font-black">PHOTO COUNT</p>
-          </TornPaperCard>
-          <TornPaperCard className="grid grid-cols-[70px_1fr] items-center gap-3 p-3">
-            <div className="grid h-16 w-16 grid-cols-3 grid-rows-3 gap-1 bg-zinc-950 p-1">
-              {Array.from({ length: 9 }).map((_, index) => <span key={index} className={index % 2 ? "bg-uga-paper" : "bg-uga-red"} />)}
+        <aside className="min-h-0 overflow-y-auto rounded-lg border border-uga-paper/35 bg-black/35 p-4">
+          <div className="mb-4 grid grid-cols-[1fr_132px] items-start gap-3">
+            <div>
+              <RansomTitle size="text-3xl">PARTY CAM</RansomTitle>
+              <p className="hand mt-2 text-lg font-black uppercase">2 drinks // 2 photos</p>
             </div>
-            <p className="hand text-xl font-black">Scan QR Code to Join</p>
-          </TornPaperCard>
+            <TornPaperCard className="p-2 text-center">
+              <div className="mx-auto grid h-20 w-20 grid-cols-3 grid-rows-3 gap-1 bg-zinc-950 p-1">
+                {Array.from({ length: 9 }).map((_, index) => <span key={index} className={index % 2 ? "bg-uga-paper" : "bg-uga-red"} />)}
+              </div>
+              <p className="hand mt-2 text-sm font-black leading-tight">Scan to Join</p>
+            </TornPaperCard>
+          </div>
+
+          <div className="mb-4 grid grid-cols-2 gap-3">
+            <TornPaperCard className="p-4 text-center">
+              <p className="text-xs font-black uppercase">Total Drinks</p>
+              <b className="text-5xl text-uga-red">{totalDrinks}</b>
+              <p className="font-black">CUPS</p>
+            </TornPaperCard>
+            <TornPaperCard className="p-4 text-center">
+              <p className="text-xs font-black uppercase">Total Photos</p>
+              <b className="text-5xl text-uga-red">{totalProofs}</b>
+              <p className="font-black">PHOTOS</p>
+            </TornPaperCard>
+          </div>
+
+          <div className="mb-4 grid grid-cols-2 gap-3">
+            {featuredShots.map((shot, index) => (
+              <PolaroidCard
+                key={shot.id || `${shot.user}-${index}`}
+                initials={shot.user.slice(0, 2).toUpperCase()}
+                photoUrl={shot.photoUrl}
+                label={shot.label}
+                sublabel={shot.user}
+                color={shot.color}
+                className="p-2 pb-5"
+                rotate={index % 2 ? "rotate-2" : "-rotate-2"}
+              />
+            ))}
+            {featuredShots.length === 0 && (
+              <TornPaperCard className="col-span-2 grid h-56 place-items-center p-5 text-center text-2xl font-black">
+                Photos will show here after proofs are approved.
+              </TornPaperCard>
+            )}
+          </div>
+
+          <RedTornButton href="/gallery" className="mt-4 w-full text-sm">View Gallery</RedTornButton>
         </aside>
 
         <div className="col-span-3 self-end overflow-hidden bg-uga-red py-2 text-2xl font-black uppercase text-white">
