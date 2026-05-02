@@ -39,7 +39,7 @@ export async function PATCH(request, { params }) {
       await tx.feedItem.create({
         data: {
           userId: submission.userId,
-          type: "PROOF_APPROVED",
+          type: "QUEST_APPROVED",
           text: submission.drinks ? "logged a drink proof!" : "submitted a party proof!",
           points: submission.points,
           icon: submission.drinks ? "CUP" : "CAM",

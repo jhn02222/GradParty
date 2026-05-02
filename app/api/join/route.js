@@ -26,7 +26,7 @@ export async function POST(request) {
     await prisma.feedItem.create({
       data: {
         userId: user.id,
-        type: "PROFILE_CREATED",
+        type: "QUEST_SUBMITTED",
         text: "joined the party!",
         points: 0,
         icon: "GO",

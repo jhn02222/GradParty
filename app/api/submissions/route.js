@@ -46,7 +46,7 @@ export async function POST(request) {
     await tx.feedItem.create({
       data: {
         userId: user.id,
-        type: "PROOF_APPROVED",
+        type: "QUEST_APPROVED",
         text: drinks ? "logged a drink proof!" : "submitted a party proof!",
         points,
         icon: drinks ? "CUP" : "CAM",
