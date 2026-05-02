@@ -50,6 +50,7 @@ export default function SubmitPage() {
     <main className="paper-bg">
       <section className="mobile-page safe-top">
         <RansomTitle size="text-2xl" className="mb-6 text-center">CHOOSE YOUR DRINK</RansomTitle>
+        <p className="hand mb-5 text-center text-lg font-black">Tap a drink. No photo needed.</p>
         <div className="grid grid-cols-2 gap-4">
           {drinks.map((drink, index) => (
             <button

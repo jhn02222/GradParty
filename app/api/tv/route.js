@@ -4,6 +4,8 @@ import { feedShape, rankedUsers } from "../../lib/game";
 import { ensureSeedData } from "../../lib/seed";
 import { requireAdmin } from "../../lib/adminAuth";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request) {
   const unauthorized = requireAdmin(request);
   if (unauthorized) return unauthorized;
@@ -17,7 +19,7 @@ export async function GET(request) {
     prisma.submission.findMany({
       where: { status: "APPROVED" },
       orderBy: { reviewedAt: "desc" },
-      take: 3,
+      take: 60,
       include: { user: true, quest: true },
     }),
     prisma.submission.groupBy({
@@ -55,5 +57,9 @@ export async function GET(request) {
       photoUrl: item.photoUrl,
       color: "from-red-700 to-zinc-950",
     })),
+  }, {
+    headers: {
+      "Cache-Control": "no-store, max-age=0",
+    },
   });
 }
