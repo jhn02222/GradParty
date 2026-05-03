@@ -10,7 +10,7 @@ export async function GET(request) {
   const unauthorized = requireAdmin(request);
   if (unauthorized) return unauthorized;
   await ensureSeedData();
-  const users = await rankedUsers(10);
+  const users = await rankedUsers(100);
   const [totalPlayers, totalDrinks, totalProofs, feed, gallery, drinkTypeCounts] = await Promise.all([
     prisma.user.count(),
     prisma.user.aggregate({ _sum: { drinks: true } }),
@@ -54,7 +54,9 @@ export async function GET(request) {
       user: item.user.name,
       label: item.drinks ? "Drink proof" : "Party proof",
       points: item.points,
+      drinks: item.drinks,
       photoUrl: item.photoUrl,
+      createdAt: item.reviewedAt || item.createdAt,
       color: "from-red-700 to-zinc-950",
     })),
   }, {

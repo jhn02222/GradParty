@@ -220,12 +220,21 @@ button {
   animation: tv-photo-wall-scroll 34s linear infinite;
 }
 
+.tv-leaderboard-scroll {
+  animation: tv-leaderboard-scroll 38s linear infinite;
+}
+
 .tv-score-row {
-  clip-path: polygon(0 8%, 6% 4%, 13% 8%, 25% 2%, 42% 6%, 58% 3%, 75% 7%, 92% 2%, 100% 9%, 98% 52%, 100% 91%, 87% 96%, 70% 92%, 52% 98%, 34% 93%, 16% 98%, 2% 92%);
+  clip-path: polygon(0 5%, 12% 2%, 28% 4%, 45% 2%, 64% 4%, 82% 2%, 100% 5%, 98.5% 50%, 100% 95%, 84% 98%, 64% 96%, 43% 98%, 22% 96%, 0 98%, 1.5% 50%);
   border-left: 8px solid var(--red);
 }
 
 @keyframes tv-photo-wall-scroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+
+@keyframes tv-leaderboard-scroll {
   from { transform: translateY(0); }
   to { transform: translateY(-50%); }
 }

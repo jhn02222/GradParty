@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PolaroidCard, RansomTitle, RedTornButton, TornPaperCard } from "../components/ScrapbookComponents";
+import { RansomTitle, RedTornButton, TornPaperCard } from "../components/ScrapbookComponents";
 
 export default function TvPage() {
   const [data, setData] = useState(null);
@@ -9,6 +9,8 @@ export default function TvPage() {
   const [authorized, setAuthorized] = useState(false);
   const [message, setMessage] = useState("");
   const leaders = data?.users || [];
+  const lowerLeaders = leaders.slice(3);
+  const lowerLeaderLoop = lowerLeaders.length > 6 ? [...lowerLeaders, ...lowerLeaders] : lowerLeaders;
   const totalDrinks = data?.totals?.drinks ?? leaders.reduce((sum, user) => sum + user.drinks, 0);
   const totalPlayers = data?.totals?.players ?? leaders.length;
   const totalProofs = data?.totals?.proofs ?? 0;
@@ -73,8 +75,8 @@ export default function TvPage() {
             <TornPaperCard className="p-5 rotate-1">
               <p className="hand text-3xl font-black leading-tight">EAT. DRINK.</p>
               <p className="hand text-3xl font-black leading-tight text-uga-red">GO DAWGS.</p>
-              <div className="mt-4 grid h-28 place-items-center overflow-hidden border-2 border-dashed border-zinc-900 bg-white/35">
-                <img src="/assets/DawgGrad.png" alt="Dawg grad" className="h-full w-full object-contain p-2" />
+              <div className="mt-4 grid h-40 place-items-center border-2 border-dashed border-zinc-900 bg-white/35">
+                <img src="/assets/DawgGrad.png" alt="Dawg grad" className="max-h-full max-w-full object-contain p-2" />
               </div>
             </TornPaperCard>
           </div>
@@ -93,14 +95,19 @@ export default function TvPage() {
           </div>
         </aside>
 
-        <section className="relative min-h-0 px-2">
+        <section className="relative grid min-h-0 grid-rows-[auto_auto_minmax(0,1fr)] px-2">
           <div className="mb-3 text-center">
             <p className="inline-block -rotate-2 bg-yellow-300 px-5 py-1 text-2xl font-black uppercase text-zinc-950 shadow-paper">LIVE</p>
             <RansomTitle size="text-5xl" className="-mt-1 text-center">LEADERBOARD</RansomTitle>
             <p className="hand mt-1 text-lg font-bold uppercase">Top grads ranking</p>
           </div>
-          <ol className="space-y-2 overflow-hidden pr-1">
-            {leaders.slice(0, 8).map((user, index) => <TvLeaderboardRow key={user.id || user.name} user={user} emphasis={index < 3} />)}
+          <section className="mb-4 grid grid-cols-[1.2fr_0.9fr_0.9fr] items-end gap-3">
+            {leaders[0] && <TopSpotlight user={leaders[0]} place="1st" large />}
+            {leaders[1] && <TopSpotlight user={leaders[1]} place="2nd" />}
+            {leaders[2] && <TopSpotlight user={leaders[2]} place="3rd" />}
+          </section>
+          <ol className={`min-h-0 space-y-2 overflow-hidden pr-1 ${lowerLeaders.length > 6 ? "tv-leaderboard-scroll" : ""}`}>
+            {lowerLeaderLoop.map((user, index) => <TvLeaderboardRow key={`${user.id || user.name}-${index}`} user={user} />)}
             {leaders.length === 0 && <TornPaperCard className="p-8 text-center text-3xl font-black">Waiting for the first guest to join.</TornPaperCard>}
           </ol>
         </section>
@@ -136,17 +143,12 @@ export default function TvPage() {
             </TornPaperCard>
           </div>
 
-          <div className="min-h-0 overflow-hidden">
-            <div className={`grid grid-cols-3 gap-3 ${partyCam.length > 6 ? "tv-photo-wall-scroll" : ""}`}>
+          <div className="min-h-0 overflow-hidden px-1 pt-2">
+            <div className={`grid grid-cols-3 gap-x-5 gap-y-7 ${partyCam.length > 6 ? "tv-photo-wall-scroll" : ""}`}>
               {photoWall.map((shot, index) => (
-                <PolaroidCard
+                <TvPhotoCard
                   key={`${shot.id || shot.user}-${index}`}
-                  initials={shot.user.slice(0, 2).toUpperCase()}
-                  photoUrl={shot.photoUrl}
-                  label={shot.label}
-                  sublabel={shot.user}
-                  color={shot.color}
-                  className="tv-polaroid p-1.5 pb-4"
+                  shot={shot}
                   rotate={index % 2 ? "rotate-2" : "-rotate-2"}
                 />
               ))}
@@ -169,8 +171,8 @@ export default function TvPage() {
 
 function TvLeaderboardRow({ user, emphasis = false }) {
   return (
-    <li className={`tv-score-row grid grid-cols-[36px_42px_minmax(280px,1fr)_48px_64px] items-center gap-2 px-3 py-2 text-zinc-950 shadow-paper ${emphasis ? "bg-uga-paper text-lg font-black" : "bg-uga-paper/95"} ${user.rank % 2 ? "-rotate-1" : "rotate-1"}`}>
-      <span className={`grid h-9 w-9 place-items-center font-black ${emphasis ? "bg-uga-red text-white" : "bg-zinc-950 text-white"}`}>{user.rank}</span>
+    <li className="tv-score-row grid grid-cols-[36px_42px_minmax(280px,1fr)_48px_64px] items-center gap-2 bg-uga-paper/95 px-4 py-2.5 text-zinc-950 shadow-paper">
+      <span className="grid h-9 w-9 place-items-center bg-zinc-950 font-black text-white">{user.rank}</span>
       <span className="grid h-10 w-10 place-items-center overflow-hidden bg-zinc-900 text-xs font-black text-white">
         {user.photoUrl?.startsWith("/api/files") || user.photoUrl?.startsWith("http") ? <img src={user.photoUrl} alt={user.name} className="h-full w-full object-cover" /> : user.photo}
       </span>
@@ -185,6 +187,53 @@ function TvLeaderboardRow({ user, emphasis = false }) {
       </span>
     </li>
   );
+}
+
+function TopSpotlight({ user, place, large = false }) {
+  return (
+    <article className={`relative bg-uga-paper text-zinc-950 shadow-paper ${large ? "p-5" : "p-4"} ${large ? "-rotate-1" : "rotate-1"}`}>
+      <span className={`absolute -top-4 left-4 bg-uga-red px-3 py-1 font-black uppercase text-white ${large ? "text-lg" : "text-sm"}`}>{place}</span>
+      <div className={`grid ${large ? "grid-cols-[64px_1fr]" : "grid-cols-[50px_1fr]"} items-center gap-3`}>
+        <span className={`${large ? "h-16 w-16 text-xl" : "h-12 w-12 text-sm"} grid place-items-center overflow-hidden bg-zinc-950 font-black text-white`}>
+          {user.photoUrl?.startsWith("/api/files") || user.photoUrl?.startsWith("http") ? <img src={user.photoUrl} alt={user.name} className="h-full w-full object-cover" /> : user.photo}
+        </span>
+        <div className="min-w-0">
+          <h2 className={`hand truncate font-black ${large ? "text-4xl" : "text-3xl"}`}>{user.name}</h2>
+          <DrinkTypeIcons counts={user.drinkCounts || {}} />
+        </div>
+      </div>
+      <div className="mt-3 flex items-center justify-between border-t-2 border-zinc-950/15 pt-2 font-black">
+        <span className="text-uga-red">{user.points} pts</span>
+        <span className="flex items-center gap-1 text-2xl">
+          {user.drinks}
+          <RedCupIcon />
+        </span>
+      </div>
+    </article>
+  );
+}
+
+function TvPhotoCard({ shot, rotate = "" }) {
+  return (
+    <figure className={`tv-polaroid relative bg-uga-paper p-2 pb-5 text-zinc-950 shadow-taped ${rotate}`}>
+      <div className="flex aspect-[4/5] items-center justify-center overflow-hidden bg-zinc-900 text-3xl font-black text-white">
+        {shot.photoUrl ? (
+          <img src={shot.photoUrl} alt={`${shot.user} proof`} className="h-full w-full object-cover" />
+        ) : (
+          shot.user.slice(0, 2).toUpperCase()
+        )}
+      </div>
+      <figcaption className="hand mt-2 text-center text-sm font-black leading-tight">{shot.user}</figcaption>
+      <p className="mt-1 text-center text-[10px] font-black uppercase text-uga-red">
+        {shot.drinks || 0} drinks · {formatPhotoTime(shot.createdAt)}
+      </p>
+    </figure>
+  );
+}
+
+function formatPhotoTime(value) {
+  if (!value) return "Just now";
+  return new Date(value).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
 }
 
 const drinkIconAssets = [
