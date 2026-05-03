@@ -70,7 +70,7 @@ export default function TvPage() {
       <section className="mx-auto grid h-full max-w-[1920px] grid-cols-[250px_minmax(560px,0.85fr)_minmax(440px,0.55fr)] grid-rows-[minmax(0,1fr)_54px] gap-4">
         <aside className="relative flex min-h-0 flex-col justify-between pr-4">
           <div>
-            <RansomTitle size="text-4xl" className="mb-5 -rotate-2">GRAD PARTY</RansomTitle>
+            <RansomTitle size="text-3xl" className="mb-5 -rotate-2 whitespace-nowrap">GRAD PARTY</RansomTitle>
             <TornPaperCard className="p-5 rotate-1">
               <p className="hand text-3xl font-black leading-tight">EAT. DRINK.</p>
               <p className="hand text-3xl font-black leading-tight text-uga-red">GO DAWGS.</p>
@@ -100,7 +100,7 @@ export default function TvPage() {
             <RansomTitle size="text-5xl" className="-mt-1 text-center">LEADERBOARD</RansomTitle>
             <p className="hand mt-1 text-lg font-bold uppercase">Top grads ranking</p>
           </div>
-          <section className="mb-4 grid grid-cols-[1.2fr_0.9fr_0.9fr] items-end gap-3">
+          <section className="mb-4 grid grid-cols-2 gap-3">
             {leaders[0] && <TopSpotlight user={leaders[0]} place="1st" large />}
             {leaders[1] && <TopSpotlight user={leaders[1]} place="2nd" />}
             {leaders[2] && <TopSpotlight user={leaders[2]} place="3rd" />}
@@ -120,9 +120,7 @@ export default function TvPage() {
             </div>
             <TornPaperCard className="relative p-2 text-center">
               <span className="absolute -top-2 left-7 h-5 w-20 -rotate-6 bg-yellow-300" />
-              <div className="mx-auto grid h-20 w-20 grid-cols-3 grid-rows-3 gap-1 bg-zinc-950 p-1">
-                {Array.from({ length: 9 }).map((_, index) => <span key={index} className={index % 2 ? "bg-uga-paper" : "bg-uga-red"} />)}
-              </div>
+              <img src="/assets/qrCode.png" alt="QR code to join" className="mx-auto h-24 w-24 object-contain" />
               <p className="hand mt-2 text-sm font-black leading-tight">Scan to Join</p>
             </TornPaperCard>
           </div>
@@ -170,9 +168,9 @@ export default function TvPage() {
 
 function TvLeaderboardRow({ user, emphasis = false }) {
   return (
-    <li className="tv-score-row grid min-h-16 grid-cols-[36px_42px_minmax(420px,1fr)_48px_64px] items-center gap-2 bg-uga-paper/95 px-4 py-3 text-zinc-950 shadow-paper">
-      <span className="grid h-9 w-9 place-items-center bg-zinc-950 font-black text-white">{user.rank}</span>
-      <span className="grid h-10 w-10 place-items-center overflow-hidden bg-zinc-900 text-xs font-black text-white">
+    <li className="tv-score-row grid min-h-16 grid-cols-[34px_46px_minmax(420px,1fr)_48px_64px] items-center gap-2 bg-uga-paper/95 px-4 py-3 text-zinc-950 shadow-paper">
+      <span className="text-center text-2xl font-black text-uga-red">{user.rank}</span>
+      <span className="grid h-11 w-11 place-items-center overflow-hidden rounded-full bg-zinc-900 text-xs font-black text-white">
         {user.photoUrl?.startsWith("/api/files") || user.photoUrl?.startsWith("http") ? <img src={user.photoUrl} alt={user.name} className="h-full w-full object-cover" /> : user.photo}
       </span>
       <span className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-start gap-3">
@@ -190,10 +188,10 @@ function TvLeaderboardRow({ user, emphasis = false }) {
 
 function TopSpotlight({ user, place, large = false }) {
   return (
-    <article className={`relative bg-uga-paper text-zinc-950 shadow-paper ${large ? "p-5" : "p-4"} ${large ? "-rotate-1" : "rotate-1"}`}>
+    <article className={`relative bg-uga-paper text-zinc-950 shadow-paper ${large ? "col-span-2 p-5" : "p-4"} ${large ? "-rotate-1" : "rotate-1"}`}>
       <span className={`absolute -top-4 left-4 bg-uga-red px-3 py-1 font-black uppercase text-white ${large ? "text-lg" : "text-sm"}`}>{place}</span>
-      <div className={`grid ${large ? "grid-cols-[64px_1fr]" : "grid-cols-[50px_1fr]"} items-center gap-3`}>
-        <span className={`${large ? "h-16 w-16 text-xl" : "h-12 w-12 text-sm"} grid place-items-center overflow-hidden bg-zinc-950 font-black text-white`}>
+      <div className={`grid ${large ? "grid-cols-[76px_1fr]" : "grid-cols-[56px_1fr]"} items-center gap-3`}>
+        <span className={`${large ? "h-20 w-20 text-xl" : "h-14 w-14 text-sm"} grid place-items-center overflow-hidden rounded-full bg-zinc-950 font-black text-white`}>
           {user.photoUrl?.startsWith("/api/files") || user.photoUrl?.startsWith("http") ? <img src={user.photoUrl} alt={user.name} className="h-full w-full object-cover" /> : user.photo}
         </span>
         <div className="min-w-0">
@@ -250,19 +248,17 @@ const drinkIconAssets = [
 ];
 
 function DrinkTypeIcons({ counts }) {
+  const icons = drinkIconAssets.flatMap(([type, src, label]) =>
+    Array.from({ length: counts[type] || 0 }).map((_, index) => ({ key: `${type}-${index}`, src, label }))
+  );
+  const visible = icons.slice(0, 8);
+  const hidden = Math.max(0, icons.length - visible.length);
   return (
-    <span className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
-      {drinkIconAssets.map(([type, src, label]) => {
-        const count = counts[type] || 0;
-        if (!count) return null;
-        return (
-          <span key={type} className="flex flex-wrap items-center gap-0.5" aria-label={`${count} ${label}`}>
-            {Array.from({ length: count }).map((_, index) => (
-              <img key={index} src={src} alt="" className="h-9 w-9 object-contain" />
-            ))}
-          </span>
-        );
-      })}
+    <span className="flex min-w-0 flex-1 items-center gap-1.5 overflow-hidden">
+      {visible.map((icon) => (
+        <img key={icon.key} src={icon.src} alt={icon.label} className="h-9 w-9 shrink-0 object-contain" />
+      ))}
+      {hidden > 0 && <b className="shrink-0 text-sm">+{hidden}</b>}
     </span>
   );
 }

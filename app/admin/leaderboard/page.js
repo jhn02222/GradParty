@@ -85,7 +85,7 @@ export default function AdminLeaderboardPage() {
           {leaders.map((user) => (
             <TornPaperCard key={user.id || user.name} className="p-4">
               <div className="grid grid-cols-[42px_1fr_auto] items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center bg-uga-red text-xl font-black text-white">{user.rank}</span>
+                <span className="text-center text-2xl font-black text-uga-red">{user.rank}</span>
                 <div className="min-w-0">
                   <h2 className="hand truncate text-3xl font-black">{user.name}</h2>
                   <DrinkTypeIcons counts={user.drinkCounts || {}} />
@@ -107,19 +107,17 @@ export default function AdminLeaderboardPage() {
 }
 
 function DrinkTypeIcons({ counts }) {
+  const icons = drinkIconAssets.flatMap(([type, src, label]) =>
+    Array.from({ length: counts[type] || 0 }).map((_, index) => ({ key: `${type}-${index}`, src, label }))
+  );
+  const visible = icons.slice(0, 8);
+  const hidden = Math.max(0, icons.length - visible.length);
   return (
-    <div className="mt-2 flex flex-wrap items-center gap-2">
-      {drinkIconAssets.map(([type, src, label]) => {
-        const count = counts[type] || 0;
-        if (!count) return null;
-        return (
-          <span key={type} className="inline-flex flex-wrap items-center gap-1 rounded-full bg-white/80 px-2 py-1 text-xs font-black text-zinc-950" aria-label={`${count} ${label}`}>
-            {Array.from({ length: count }).map((_, index) => (
-              <img key={index} src={src} alt="" className="h-7 w-7 object-contain" />
-            ))}
-          </span>
-        );
-      })}
+    <div className="mt-2 flex items-center gap-1 overflow-hidden">
+      {visible.map((icon) => (
+        <img key={icon.key} src={icon.src} alt={icon.label} className="h-7 w-7 shrink-0 object-contain" />
+      ))}
+      {hidden > 0 && <b className="shrink-0 text-xs">+{hidden}</b>}
     </div>
   );
 }
