@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useEffect } from "react";
-import { BottomNav, PhotoUploadBox, RansomTitle, RedTornButton, TapeCorner } from "../components/ScrapbookComponents";
+import { BottomNav, RansomTitle, TapeCorner } from "../components/ScrapbookComponents";
 
 const drinks = [
   { title: "Beer", type: "BEER", asset: "/assets/Beer.png", points: 5, drinks: 1 },
@@ -12,12 +12,8 @@ const drinks = [
 ];
 
 export default function SubmitPage() {
-  const [selected, setSelected] = useState(drinks[2]);
   const [submissionTarget, setSubmissionTarget] = useState(null);
-  const [photoUrl, setPhotoUrl] = useState("");
-  const [photoPreview, setPhotoPreview] = useState("");
-  const [uploadingPhoto, setUploadingPhoto] = useState(false);
-  const [photoStatus, setPhotoStatus] = useState("");
+  const [submittingType, setSubmittingType] = useState("");
   const [status, setStatus] = useState("");
 
   useEffect(() => {
@@ -30,55 +26,51 @@ export default function SubmitPage() {
       .catch(() => setSubmissionTarget(null));
   }, []);
 
-  async function submitProof() {
+  async function submitDrinkProof(drink, file) {
     const userId = localStorage.getItem("gradPartyUserId");
     const userName = localStorage.getItem("gradPartyGuestName");
-    if (!submissionTarget?.id) return;
-    if (uploadingPhoto) {
-      setStatus("Wait for your photo to finish uploading.");
+    if (!submissionTarget?.id || submittingType) return;
+    if (!file) return;
+
+    const signature = `${file.name}:${file.size}:${file.lastModified}`;
+    const submittedPhotos = JSON.parse(localStorage.getItem("gradPartySubmittedProofs") || "[]");
+    if (submittedPhotos.includes(signature)) {
+      setStatus("Use a new photo for this drink.");
       return;
     }
-    if (!photoUrl) {
-      setStatus("Add a photo proof first.");
-      return;
-    }
-    setStatus("Submitting...");
-    const response = await fetch("/api/submissions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userId,
-        userName,
-        questId: submissionTarget.id,
-        drinkType: selected.type,
-        photoUrl,
-        points: selected.points,
-        drinks: selected.drinks,
-      }),
-    });
-    setStatus(response.ok ? `${selected.title} added!` : "Could not submit. Try again.");
-  }
 
-  async function handleProofPhoto(file) {
-    setPhotoPreview(URL.createObjectURL(file));
-    setUploadingPhoto(true);
-    setPhotoStatus("Uploading proof...");
-    const form = new FormData();
-    form.append("file", file);
-    form.append("folder", "submissions");
-
+    setSubmittingType(drink.type);
+    setStatus(`Uploading ${drink.title} proof...`);
     try {
-      const response = await fetch("/api/upload", { method: "POST", body: form });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Upload failed");
-      setPhotoUrl(data.url);
-      setPhotoStatus("Proof photo saved!");
-    } catch (uploadError) {
-      console.error(uploadError);
-      setPhotoUrl("");
-      setPhotoStatus("Photo upload failed. Try another image.");
+      const form = new FormData();
+      form.append("file", file);
+      form.append("folder", "submissions");
+      const uploadResponse = await fetch("/api/upload", { method: "POST", body: form });
+      const uploadData = await uploadResponse.json();
+      if (!uploadResponse.ok) throw new Error(uploadData.error || "Upload failed");
+
+      setStatus(`Submitting ${drink.title}...`);
+      const response = await fetch("/api/submissions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId,
+          userName,
+          questId: submissionTarget.id,
+          drinkType: drink.type,
+          photoUrl: uploadData.url,
+          points: drink.points,
+          drinks: drink.drinks,
+        }),
+      });
+      if (!response.ok) throw new Error("Could not submit");
+      localStorage.setItem("gradPartySubmittedProofs", JSON.stringify([...submittedPhotos, signature].slice(-100)));
+      setStatus(`${drink.title} added!`);
+    } catch (submitError) {
+      console.error(submitError);
+      setStatus("Could not submit. Try another photo.");
     } finally {
-      setUploadingPhoto(false);
+      setSubmittingType("");
     }
   }
 
@@ -86,30 +78,36 @@ export default function SubmitPage() {
     <main className="paper-bg">
       <section className="mobile-page safe-top">
         <RansomTitle size="text-2xl" className="mb-6 text-center">CHOOSE YOUR DRINK</RansomTitle>
-        <p className="hand mb-5 text-center text-lg font-black">Pick a drink and add photo proof.</p>
+        <p className="hand mb-5 text-center text-lg font-black">Tap a drink, then upload/take its photo proof.</p>
         <div className="grid grid-cols-2 gap-4">
           {drinks.map((drink, index) => (
-            <button
+            <label
               key={drink.title}
-              onClick={() => setSelected(drink)}
-              className={`relative bg-uga-paper p-3 pb-4 text-zinc-950 shadow-paper ${selected.title === drink.title ? "outline outline-4 outline-uga-red" : ""} ${index % 2 ? "rotate-2" : "-rotate-2"}`}
-              aria-pressed={selected.title === drink.title}
+              className={`relative block bg-uga-paper p-3 pb-4 text-center text-zinc-950 shadow-paper ${submittingType === drink.type ? "outline outline-4 outline-uga-red" : ""} ${index % 2 ? "rotate-2" : "-rotate-2"}`}
             >
+              <input
+                className="sr-only"
+                type="file"
+                accept="image/*"
+                capture="environment"
+                disabled={Boolean(submittingType)}
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  event.target.value = "";
+                  submitDrinkProof(drink, file);
+                }}
+              />
               <TapeCorner corners={["tl", "tr", "bl", "br"]} />
               <div className="mb-3 grid aspect-square place-items-center overflow-hidden bg-white/70">
                 <img src={drink.asset} alt="" className="h-full w-full object-contain p-3" />
               </div>
               <h2 className="font-black uppercase text-uga-red">{drink.title}</h2>
               <p className="text-xs font-black">+{drink.points} pts</p>
-              <p className="text-xs font-black">+{drink.drinks} drink</p>
-            </button>
+              <p className="text-xs font-black">{submittingType === drink.type ? "Submitting..." : "Tap to add photo"}</p>
+            </label>
           ))}
         </div>
-        <section className="mt-7 space-y-4">
-          <PhotoUploadBox helper="Upload photo proof" small onPhoto={handleProofPhoto} previewUrl={photoPreview} uploading={uploadingPhoto} status={photoStatus} />
-          <RedTornButton onClick={submitProof} className="w-full">{uploadingPhoto ? "PHOTO UPLOADING..." : `SUBMIT ${selected.title}`}</RedTornButton>
-          {status && <p className="hand text-center text-sm font-bold text-uga-red">{status}</p>}
-        </section>
+        {status && <p className="hand mt-7 text-center text-sm font-bold text-uga-red">{status}</p>}
       </section>
       <BottomNav />
     </main>
