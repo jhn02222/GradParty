@@ -113,9 +113,10 @@ function DrinkTypeIcons({ counts }) {
         const count = counts[type] || 0;
         if (!count) return null;
         return (
-          <span key={type} className="inline-flex items-center gap-1 rounded-full bg-white/80 px-2 py-1 text-xs font-black text-zinc-950" aria-label={`${count} ${label}`}>
-            <img src={src} alt="" className="h-6 w-6 object-contain" />
-            {count}
+          <span key={type} className="inline-flex flex-wrap items-center gap-1 rounded-full bg-white/80 px-2 py-1 text-xs font-black text-zinc-950" aria-label={`${count} ${label}`}>
+            {Array.from({ length: count }).map((_, index) => (
+              <img key={index} src={src} alt="" className="h-7 w-7 object-contain" />
+            ))}
           </span>
         );
       })}

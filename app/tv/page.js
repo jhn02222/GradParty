@@ -10,7 +10,6 @@ export default function TvPage() {
   const [message, setMessage] = useState("");
   const leaders = data?.users || [];
   const lowerLeaders = leaders.slice(3);
-  const lowerLeaderLoop = lowerLeaders.length > 6 ? [...lowerLeaders, ...lowerLeaders] : lowerLeaders;
   const totalDrinks = data?.totals?.drinks ?? leaders.reduce((sum, user) => sum + user.drinks, 0);
   const totalPlayers = data?.totals?.players ?? leaders.length;
   const totalProofs = data?.totals?.proofs ?? 0;
@@ -106,8 +105,8 @@ export default function TvPage() {
             {leaders[1] && <TopSpotlight user={leaders[1]} place="2nd" />}
             {leaders[2] && <TopSpotlight user={leaders[2]} place="3rd" />}
           </section>
-          <ol className={`min-h-0 space-y-2 overflow-hidden pr-1 ${lowerLeaders.length > 6 ? "tv-leaderboard-scroll" : ""}`}>
-            {lowerLeaderLoop.map((user, index) => <TvLeaderboardRow key={`${user.id || user.name}-${index}`} user={user} />)}
+          <ol className="min-h-0 space-y-2 overflow-y-auto pr-2">
+            {lowerLeaders.map((user) => <TvLeaderboardRow key={user.id || user.name} user={user} />)}
             {leaders.length === 0 && <TornPaperCard className="p-8 text-center text-3xl font-black">Waiting for the first guest to join.</TornPaperCard>}
           </ol>
         </section>
@@ -171,13 +170,13 @@ export default function TvPage() {
 
 function TvLeaderboardRow({ user, emphasis = false }) {
   return (
-    <li className="tv-score-row grid grid-cols-[36px_42px_minmax(280px,1fr)_48px_64px] items-center gap-2 bg-uga-paper/95 px-4 py-2.5 text-zinc-950 shadow-paper">
+    <li className="tv-score-row grid min-h-16 grid-cols-[36px_42px_minmax(420px,1fr)_48px_64px] items-center gap-2 bg-uga-paper/95 px-4 py-3 text-zinc-950 shadow-paper">
       <span className="grid h-9 w-9 place-items-center bg-zinc-950 font-black text-white">{user.rank}</span>
       <span className="grid h-10 w-10 place-items-center overflow-hidden bg-zinc-900 text-xs font-black text-white">
         {user.photoUrl?.startsWith("/api/files") || user.photoUrl?.startsWith("http") ? <img src={user.photoUrl} alt={user.name} className="h-full w-full object-cover" /> : user.photo}
       </span>
-      <span className="flex min-w-0 items-center gap-3">
-        <span className="hand truncate text-3xl font-black">{user.name}</span>
+      <span className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-start gap-3">
+        <span className="hand whitespace-nowrap text-3xl font-black">{user.name}</span>
         <DrinkTypeIcons counts={user.drinkCounts || {}} />
       </span>
       <span className="text-right font-black text-uga-red">{user.points}</span>
@@ -224,11 +223,18 @@ function TvPhotoCard({ shot, rotate = "" }) {
         )}
       </div>
       <figcaption className="hand mt-2 text-center text-sm font-black leading-tight">{shot.user}</figcaption>
-      <p className="mt-1 text-center text-[10px] font-black uppercase text-uga-red">
-        {shot.drinks || 0} drinks · {formatPhotoTime(shot.createdAt)}
-      </p>
+      <div className="mt-1 flex items-center justify-center gap-1 text-[10px] font-black uppercase text-uga-red">
+        <DrinkTypePhotoIcon type={shot.drinkType} />
+        <span>{formatPhotoTime(shot.createdAt)}</span>
+      </div>
     </figure>
   );
+}
+
+function DrinkTypePhotoIcon({ type }) {
+  const item = drinkIconAssets.find(([drinkType]) => drinkType === type);
+  if (!item) return null;
+  return <img src={item[1]} alt={item[2]} className="h-9 w-9 object-contain" />;
 }
 
 function formatPhotoTime(value) {
@@ -245,17 +251,15 @@ const drinkIconAssets = [
 
 function DrinkTypeIcons({ counts }) {
   return (
-    <span className="flex shrink-0 items-center gap-1 overflow-hidden">
+    <span className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
       {drinkIconAssets.map(([type, src, label]) => {
         const count = counts[type] || 0;
         if (!count) return null;
-        const visible = Math.min(count, 3);
         return (
-          <span key={type} className="flex items-center gap-0.5" aria-label={`${count} ${label}`}>
-            {Array.from({ length: visible }).map((_, index) => (
-              <img key={index} src={src} alt="" className="h-6 w-6 object-contain" />
+          <span key={type} className="flex flex-wrap items-center gap-0.5" aria-label={`${count} ${label}`}>
+            {Array.from({ length: count }).map((_, index) => (
+              <img key={index} src={src} alt="" className="h-9 w-9 object-contain" />
             ))}
-            {count > visible && <b className="ml-0.5 text-xs">x{count}</b>}
           </span>
         );
       })}

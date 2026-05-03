@@ -55,6 +55,7 @@ export async function GET(request) {
       label: item.drinks ? "Drink proof" : "Party proof",
       points: item.points,
       drinks: item.drinks,
+      drinkType: item.drinkType,
       photoUrl: item.photoUrl,
       createdAt: item.reviewedAt || item.createdAt,
       color: "from-red-700 to-zinc-950",
